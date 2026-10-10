@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+  <link rel="icon" type="image/png" href="/photos/logo-round.png?v=20260227a" />
+    <link rel="stylesheet" href="/css/style.css?v=20260327resultlogosmooth4" />
+  </head>
+  <body class="result-home-page">
+    <%- include('partials/portal-nav', { resultPortalEnabled: resultPortal?.enabled !== false }) %>
+    <main class="page-shell fade-in">
+      <section class="hero-panel result-hero slide-up">
+        <div class="result-hero-logo-wrap" aria-hidden="true">
+          <div class="result-hero-logo-bounce">
+            <img src="/photos/logo-round.png" alt="Kankai Secondary School logo" class="result-hero-logo" />
+          </div>
+        </div>
+        <p class="kicker">Kankai Secondary School</p>
+        <h1>Result Portal</h1>
+        <p class="subtitle">Search your exam result instantly with your symbol number.</p>
+        <div class="result-hero-tags" aria-hidden="true">
+          <span>Class Results</span>
+          <span>Instant Search</span>
+          <span>Official Record</span>
+        </div>
+
+        <% if (resultPortal && resultPortal.enabled === false) { %>
+        <section class="glass-card search-card result-portal-closed">
+          <p class="result-portal-status">Portal Currently Hidden</p>
+          <h2>Result Portal Unavailable</h2>
+          <p><%= resultPortal.message %></p>
+        </section>
+        <% } else { %>
+        <form action="/result" method="POST" class="glass-card search-card" data-loading="true">
+          <label for="symbolNumber">Enter Symbol Number</label>
+          <div class="input-row">
+            <input
+              id="symbolNumber"
+              class="js-uppercase"
+              name="symbolNumber"
+              type="text"
+              placeholder="e.g. KKS-2081-001"
+              required
+              autocomplete="off"
+            />
+            <button type="submit" class="btn-primary glow-on-hover">Search Result</button>
+          </div>
+        </form>
+        <% } %>
+
+      </section>
+    </main>
+
+    <footer class="footer no-print">
+      <div class="container footer-grid">
+        <div>
+          <h3>Kankai Secondary School</h3>
+          <p>Quality education with discipline and practical skills.</p>
+        </div>
+        <div>
+          <h3>Address</h3>
+          <p>Mai Nagarpalika-4, Danabari, Sitali, Ilam</p>
+        </div>
+        <div>
+          <h3>Contact</h3>
+          <p>027-412005</p>
+          <p>Principal: 9843713487</p>
+          <p>kankaima75@gmail.com</p>
+        </div>
+      </div>
+      <div class="container footer-inner">
+      <div class="footer-contact-strip">
+        <span>Email : kankaima75@gmail.com | Ph: 027-412005</span>
+      </div>
+      <div class="footer-social-strip">
+        <a href="https://www.facebook.com/kankaimavi" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><span class="social-icon">f</span>Facebook</a>
+        
+        
+      </div>
+      <div class="footer-dev-credit">
+        <img src="/photos/developer-photo.jpeg" alt="Developer Anish Pandey" class="footer-dev-photo" loading="lazy" decoding="async" />
+        <div class="footer-dev-text">
+          <p class="footer-dev-kicker">Developed by</p>
+          <strong>Anish Pandey</strong>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+    <script src="/js/script.js?v=20260402galleryadmin2"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,533 @@
+<% const totalTeachers=Array.isArray(teachers) ? teachers.length : 0; const teachersWithPhotos=Array.isArray(teachers) ?
+  teachers.filter((teacher)=> teacher && teacher.img).length : 0;
+  const photoCoverage = totalTeachers ? Math.round((teachersWithPhotos / totalTeachers) * 100) : 0;
+
+  const sectionCounts = Array.isArray(teachers)
+  ? teachers.reduce((counts, teacher) => {
+  const rawSection = teacher && teacher.section ? String(teacher.section).trim().toLowerCase() : '';
+  let section = 'faculty';
+  if (rawSection === 'management' || rawSection === 'management committee') section = 'management';
+  else if (rawSection === 'administrative' || rawSection === 'administrative staff') section = 'administrative';
+  counts[section] = (counts[section] || 0) + 1;
+  return counts;
+  }, { faculty: 0, administrative: 0, management: 0 })
+  : { faculty: 0, administrative: 0, management: 0 };
+
+  const currentRole = editingTeacher ? (editingTeacher.role || editingTeacher.position || '') : '';
+  const currentSection = editingTeacher ? (editingTeacher.section || '') : '';
+  const currentDepartment = editingTeacher ? (editingTeacher.department || '') : '';
+  const currentDepartmentPosition = editingTeacher && editingTeacher.departmentOrder ?
+  Math.ceil(Number(editingTeacher.departmentOrder) / 10) : '';
+  const editingTeacherPhotoSrc = editingTeacher && editingTeacher.img ? (editingTeacher.img.startsWith('/') ?
+  editingTeacher.img : '/' + editingTeacher.img) : '';
+  const editingTeacherInitials = editingTeacher
+  ? String(editingTeacher.name || '')
+  .split(/\s+/)
+  .filter(Boolean)
+  .slice(0, 2)
+  .map((part) => part[0].toUpperCase())
+  .join('') || 'TR'
+  : 'TR';
+
+  function selectedIf(condition) {
+  return condition ? 'selected' : '';
+  }
+
+  function roleLabel(teacher) {
+  return teacher && (teacher.role || teacher.position || 'Teacher');
+  }
+
+  function normalizeSection(sectionValue) {
+  const raw = sectionValue ? String(sectionValue).trim().toLowerCase() : '';
+  if (raw === 'management' || raw === 'management committee') return 'management';
+  if (raw === 'administrative' || raw === 'administrative staff') return 'administrative';
+  return 'faculty';
+  }
+
+  function sectionLabel(sectionValue) {
+  const normalized = normalizeSection(sectionValue);
+  if (normalized === 'management') return 'Management Committee';
+  if (normalized === 'administrative') return 'Administrative Staff';
+  return 'Faculty Members';
+  }
+  %>
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      <%= title %>
+    </title>
+    <link rel="icon" type="image/png" href="/photos/logo-round.png?v=20260227a" />
+    <link rel="stylesheet" href="/css/style.css?v=20261001teacherspremium1" />
+  </head>
+
+  <body class="admin-single-tab-ready">
+    <main class="admin-layout fade-in">
+      <%- include('../partials/admin-sidebar', { activePage: 'teachers' }) %>
+
+        <section class="admin-content slide-up premium-admin-content teacher-admin-page">
+          <header class="admin-page-head glass-card premium-page-head teacher-premium-head">
+            <div class="teacher-head-copy">
+              <p class="admin-head-kicker">Roster Studio</p>
+              <h1>Team Management</h1>
+              <p class="admin-page-subtitle">Manage faculty members, administrative staff, and management committee
+                profiles from one control room.</p>
+              <div class="teacher-head-pills">
+                <span class="teacher-head-pill">
+                  <%= editingTeacher ? 'Editing Live' : 'Create Mode' %>
+                </span>
+                <span class="teacher-head-pill">Public Site Sync</span>
+              </div>
+              <div class="teacher-section-summary" aria-label="Roster section summary">
+                <span><strong>
+                    <%= sectionCounts.faculty || 0 %>
+                  </strong> Faculty</span>
+                <span><strong>
+                    <%= sectionCounts.administrative || 0 %>
+                  </strong> Administrative</span>
+                <span><strong>
+                    <%= sectionCounts.management || 0 %>
+                  </strong> Management</span>
+              </div>
+            </div>
+
+            <div class="admin-page-metrics teacher-head-metrics">
+              <div class="metric-chip">
+                <span>Total Profiles</span>
+                <strong>
+                  <%= totalTeachers %>
+                </strong>
+              </div>
+              <div class="metric-chip">
+                <span>Portrait Coverage</span>
+                <strong>
+                  <%= photoCoverage %>%
+                </strong>
+              </div>
+              <div class="metric-chip">
+                <span>Current Mode</span>
+                <strong>
+                  <%= editingTeacher ? 'Editing' : 'Adding' %>
+                </strong>
+              </div>
+            </div>
+          </header>
+
+          <% if (message) { %>
+            <div class="alert alert-success">
+              <%= message %>
+            </div>
+            <% } %>
+
+              <% if (error) { %>
+                <div class="alert alert-error">
+                  <%= error %>
+                </div>
+                <% } %>
+
+                  <section class="teacher-management-grid">
+                    <section id="teacher-form"
+                      class="glass-card popup-settings-section teacher-form-section teacher-form-premium">
+                      <div class="popup-settings-head teacher-form-head">
+                        <div>
+                          <p class="popup-settings-kicker">
+                            <%= editingTeacher ? 'Edit Profile' : 'Add Profile' %>
+                          </p>
+                          <h3>
+                            <%= editingTeacher ? 'Refine Team Profile' : 'Create A New Team Profile' %>
+                          </h3>
+                          <p class="popup-settings-subtitle">Choose exactly where the person should appear on the public
+                            website, then fill in the profile details.</p>
+                        </div>
+                        <span class="popup-settings-chip">
+                          <%= editingTeacher ? 'Editing Profile' : 'Public Profile' %>
+                        </span>
+                      </div>
+
+                      <form action="/admin/teachers" method="POST" class="popup-settings-form" data-teacher-admin-form>
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                        <input type="hidden" name="id" value="<%= editingTeacher ? editingTeacher.id : '' %>" />
+
+                        <div class="popup-settings-grid teacher-premium-form-grid">
+                          <article class="popup-control-item glass-soft teacher-form-card teacher-info-card">
+                            <div class="teacher-card-head">
+                              <div>
+                                <p class="teacher-card-kicker">Core Profile</p>
+                                <h4>Identity Details</h4>
+                              </div>
+                              <span class="teacher-card-chip">Section Ready</span>
+                            </div>
+
+                            <div class="teacher-mode-banner">
+                              <strong>
+                                <%= editingTeacher ? 'Currently editing ' + editingTeacher.name
+                                  : 'Start a fresh roster profile' %>
+                              </strong>
+                              <p>
+                                <%= editingTeacher
+                                  ? 'Update the public-facing details below and save when the profile looks right.'
+                                  : 'Fill in the key profile details first, then attach a polished portrait for the public pages.'
+                                  %>
+                              </p>
+                            </div>
+
+                            <div class="teacher-form-inputs">
+                              <label>
+                                Full Name
+                                <input type="text" name="name" value="<%= editingTeacher ? editingTeacher.name : '' %>"
+                                  required />
+                              </label>
+
+                              <label>
+                                Role / Position
+                                <select name="role" required data-teacher-role-select>
+                                  <optgroup label="Management Committee" data-teacher-role-group="management">
+                                    <% ['Chairperson', 'Member' , 'Member Secretary' ].forEach((role)=> { %>
+                                      <option value="<%= role %>" <%=selectedIf(currentRole===role) %>><%= role %>
+                                      </option>
+                                      <% }) %>
+                                  </optgroup>
+                                  <optgroup label="Teacher and staff roles" data-teacher-role-group="staff">
+                                    <% if (currentRole && !['Teacher', 'Instructor' , 'Principal' , 'Vice Principal'
+                                      , 'Accountant' , 'Security' , 'Peon' , 'Computer Instructor'
+                                      , 'Assistant Instructor' , 'Lab Assistant' , 'Computer Engineering Coordinator'
+                                      ].includes(currentRole) && !['Chairperson', 'Member' , 'Member Secretary'
+                                      ].includes(currentRole)) { %>
+                                      <option value="<%= currentRole %>" selected>
+                                        <%= currentRole %>
+                                      </option>
+                                      <% } %>
+                                        <option value="Teacher" <%=selectedIf(currentRole==='Teacher' || !currentRole)
+                                          %>>Teacher</option>
+                                        <option value="Instructor" <%=selectedIf(currentRole==='Instructor' ) %>
+                                          >Instructor</option>
+                                        <option value="Principal" <%=selectedIf(currentRole==='Principal' ) %>>Principal
+                                        </option>
+                                        <option value="Vice Principal" <%=selectedIf(currentRole==='Vice Principal' ) %>
+                                          >Vice Principal</option>
+                                        <option value="Accountant" <%=selectedIf(currentRole==='Accountant' ) %>
+                                          >Accountant</option>
+                                        <option value="Security" <%=selectedIf(currentRole==='Security' ) %>>Security
+                                        </option>
+                                        <option value="Peon" <%=selectedIf(currentRole==='Peon' ) %>>Peon</option>
+                                        <option value="Computer Instructor" data-computer-role
+                                          <%=selectedIf(currentRole==='Computer Instructor' ) %>>Computer Instructor
+                                        </option>
+                                        <option value="Assistant Instructor" data-computer-role
+                                          <%=selectedIf(currentRole==='Assistant Instructor' ) %>>Assistant Instructor
+                                        </option>
+                                        <option value="Lab Assistant" data-computer-role
+                                          <%=selectedIf(currentRole==='Lab Assistant' ) %>>Lab Assistant</option>
+                                        <option value="Computer Engineering Coordinator" data-computer-role
+                                          <%=selectedIf(currentRole==='Computer Engineering Coordinator' ) %>>Computer
+                                          Engineering Coordinator</option>
+                                  </optgroup>
+                                </select>
+                              </label>
+
+                              <label>
+                                Public Section
+                                <select name="section" required data-teacher-section-select>
+                                  <option value="faculty" <%=selectedIf(currentSection==='faculty' || !currentSection)
+                                    %>>Faculty Members</option>
+                                  <option value="administrative" <%=selectedIf(currentSection==='administrative' ) %>
+                                    >Administrative Staff</option>
+                                  <option value="management" <%=selectedIf(currentSection==='management' ) %>>Management
+                                    Committee</option>
+                                </select>
+                              </label>
+
+                              <label data-teacher-general-field>
+                                Faculty / Department
+                                <select name="department" required data-teacher-department-select>
+                                  <option value="" disabled <%=selectedIf(!currentDepartment) %>>Choose department
+                                  </option>
+                                  <% ['Computer Engineering', 'Nepali' , 'English' , 'Mathematics' , 'Science'
+                                    , 'Social Studies' , 'Economics' , 'Business Studies' , 'Physical Education'
+                                    , 'Office Staff' , 'Leadership' ].forEach((department)=> { %>
+                                    <option value="<%= department %>" <%=selectedIf(currentDepartment===department) %>>
+                                      <%= department %>
+                                    </option>
+                                    <% }) %>
+                                </select>
+                              </label>
+
+                              <label>
+                                Position in <span data-teacher-position-scope>Section</span>
+                                <select name="departmentPosition" data-teacher-card-position>
+                                  <option value="" <%=selectedIf(!currentDepartmentPosition) %>>Add at the end</option>
+                                  <% Array.from({ length: 20 }, (_, index)=> index + 1).forEach((position) => { %>
+                                    <option value="<%= position %>" <%=selectedIf(currentDepartmentPosition===position)
+                                      %>><%= position %>
+                                    </option>
+                                    <% }) %>
+                                      <% if (currentDepartmentPosition && currentDepartmentPosition> 20) { %>
+                                        <option value="<%= currentDepartmentPosition %>" selected>
+                                          <%= currentDepartmentPosition %>
+                                        </option>
+                                        <% } %>
+                                </select>
+                              </label>
+
+                              <label data-teacher-general-field>
+                                Qualification
+                                <input type="text" name="qualification" placeholder="B.Ed., M.Ed., M.E."
+                                  value="<%= editingTeacher ? (editingTeacher.qualification || '') : '' %>" />
+                              </label>
+
+                              <label data-teacher-general-field>
+                                Experience
+                                <input type="text" name="experience" placeholder="e.g. 5 years"
+                                  value="<%= editingTeacher ? (editingTeacher.experience || '') : '' %>" required />
+                              </label>
+
+                              <label data-teacher-general-field>
+                                Email Address
+                                <input type="email" name="email" autocomplete="email" placeholder="name@example.com"
+                                  value="<%= editingTeacher ? (editingTeacher.email || '') : '' %>" required />
+                              </label>
+
+                              <p class="popup-settings-subtitle" data-teacher-position-help>
+                                Use Position in Section to choose the order: 1 is first, 2 is second, 3 is third. Leave
+                                it empty to add the profile last.
+                              </p>
+                            </div>
+                          </article>
+
+                          <article class="popup-control-item glass-soft teacher-form-card teacher-upload-card">
+                            <div class="teacher-card-head">
+                              <div>
+                                <p class="teacher-card-kicker">Portrait Studio</p>
+                                <h4>Photo & Media</h4>
+                              </div>
+                              <span class="teacher-card-chip">
+                                <%= editingTeacherPhotoSrc ? 'Photo Ready' : 'Upload Suggested' %>
+                              </span>
+                            </div>
+
+                            <div class="teacher-upload-meta">
+                              <span>Portraits help the public roster feel complete and trustworthy.</span>
+                              <strong>
+                                <%= editingTeacher ? 'Keep this profile visually up to date.'
+                                  : 'Upload the best version before saving.' %>
+                              </strong>
+                            </div>
+
+                            <label>
+                              Photo Path
+                              <input type="text" name="img" placeholder="photos/Teacher/your-photo.jpg"
+                                autocomplete="off" spellcheck="false" data-teacher-photo-path
+                                value="<%= editingTeacher ? (editingTeacher.img || '') : '' %>" />
+                            </label>
+
+                            <div class="teacher-upload-shell">
+                              <input type="file" accept="image/png,image/jpeg,image/webp,image/gif"
+                                data-teacher-file-input hidden />
+                              <div class="teacher-upload-dropzone" data-teacher-dropzone tabindex="0" role="button"
+                                aria-label="Upload teacher photo">
+                                <strong>Drag and drop teacher photo here</strong>
+                                <p>Click or drop an image to save it automatically in
+                                  <code>frontend/photos/Teacher</code> and fill the public <code>photos/Teacher</code>
+                                  path.</p>
+                              </div>
+                              <div class="teacher-upload-row">
+                                <button type="button" class="btn-ghost btn-small teacher-upload-trigger"
+                                  data-teacher-file-trigger>Choose Photo</button>
+                                <span class="teacher-upload-hint">JPG, PNG, WEBP, or GIF up to 8 MB</span>
+                              </div>
+                              <p class="teacher-upload-status" data-teacher-upload-status>Drop an image here and the
+                                saved path will fill in automatically.</p>
+                            </div>
+                          </article>
+                        </div>
+
+                        <div class="popup-control-actions">
+                          <button type="submit" class="btn-primary" data-teacher-submit>
+                            <%= editingTeacher ? 'Update Teacher' : 'Add Teacher' %>
+                          </button>
+                          <% if (editingTeacher) { %>
+                            <a href="/admin/teachers" class="btn-ghost teacher-form-cancel-link">Cancel Edit</a>
+                            <% } %>
+                        </div>
+                      </form>
+                    </section>
+
+                    <aside class="teacher-side-column">
+                      <article class="glass-card teacher-side-card teacher-preview-card">
+                        <div class="teacher-preview-head">
+                          <div>
+                            <p class="teacher-side-kicker">Live Preview</p>
+                            <h3>Public Team Card</h3>
+                          </div>
+                          <span class="teacher-preview-status">
+                            <%= editingTeacher ? 'Editing Live' : 'Draft Mode' %>
+                          </span>
+                        </div>
+
+                        <div class="teacher-preview-stage">
+                          <div class="teacher-preview-frame">
+                            <% if (editingTeacherPhotoSrc) { %>
+                              <img src="<%= editingTeacherPhotoSrc %>"
+                                alt="<%= editingTeacher ? editingTeacher.name : 'Teacher preview' %>" loading="lazy"
+                                decoding="async" data-teacher-live-image />
+                              <span class="teacher-preview-fallback" data-teacher-live-fallback hidden>
+                                <%= editingTeacherInitials %>
+                              </span>
+                              <% } else { %>
+                                <img src="" alt="Teacher preview" loading="lazy" decoding="async"
+                                  data-teacher-live-image hidden />
+                                <span class="teacher-preview-fallback" data-teacher-live-fallback>
+                                  <%= editingTeacherInitials %>
+                                </span>
+                                <% } %>
+                          </div>
+                          <div class="teacher-preview-copy">
+                            <span class="teacher-preview-chip" data-teacher-live-mode>
+                              <%= editingTeacher ? 'Editing Profile' : 'New Profile Draft' %>
+                            </span>
+                            <h4 data-teacher-live-name>
+                              <%= editingTeacher ? editingTeacher.name : 'Teacher Name' %>
+                            </h4>
+                            <p class="teacher-preview-role" data-teacher-live-role>
+                              <%= editingTeacher ? (editingTeacher.role || editingTeacher.position || 'Teacher' )
+                                : 'Role / Position' %>
+                            </p>
+                            <p class="teacher-preview-qualification" data-teacher-live-qualification>
+                              <%= editingTeacher ? (editingTeacher.qualification || 'Qualification not added yet' )
+                                : 'Qualification will appear here' %>
+                            </p>
+                          </div>
+                        </div>
+
+                        <div class="teacher-preview-foot">
+                          <span>Visible on selected public section</span>
+                          <strong>Design sync enabled</strong>
+                        </div>
+                      </article>
+
+                      <article class="glass-card teacher-side-card teacher-playbook-card">
+                        <p class="teacher-side-kicker">Quick Playbook</p>
+                        <ul class="teacher-playbook-list">
+                          <li>Select the correct public section first so the profile appears on the right page.</li>
+                          <li>Use the public display name exactly as visitors should see it.</li>
+                          <li>Upload clear portrait images for a more complete and premium public roster.</li>
+                        </ul>
+                      </article>
+                    </aside>
+                  </section>
+
+                  <section class="glass-card premium-table-card teacher-table-card teacher-table-premium">
+                    <div class="managed-table-head teacher-table-head">
+                      <div>
+                        <p class="popup-settings-kicker">Roster Directory</p>
+                        <h3>Team Directory</h3>
+                        <p class="popup-settings-subtitle">Search, scan, and update every public team profile from one
+                          premium workspace.</p>
+                      </div>
+                      <div class="managed-table-actions">
+                        <span class="js-teacher-count" data-total="<%= totalTeachers %>">Showing <%= totalTeachers %>
+                            records</span>
+                        <button type="button" class="btn-ghost btn-small js-teacher-toggle" aria-expanded="false"
+                          hidden>See More</button>
+                      </div>
+                    </div>
+
+                    <% if (teachers.length) { %>
+                      <div class="teacher-table-toolbar">
+                        <label class="teacher-search-field">
+                          <span>Filter Section</span>
+                          <select data-teacher-section-filter>
+                            <option value="">All Sections</option>
+                            <option value="faculty">Faculty Members</option>
+                            <option value="administrative">Administrative Staff</option>
+                            <option value="management">Management Committee</option>
+                          </select>
+                        </label>
+                        <label class="teacher-search-field">
+                          <span>Search Roster</span>
+                          <input type="search"
+                            placeholder="Search by name, role, section, qualification, or department..."
+                            data-teacher-search />
+                        </label>
+                      </div>
+                      <p class="empty-state teacher-filter-empty" data-teacher-empty-state hidden>No profile matches
+                        your search.</p>
+                      <% } %>
+
+                        <div class="table-wrap">
+                          <table class="teacher-table" data-initial-limit="6">
+                            <thead>
+                              <tr>
+                                <th>Person</th>
+                                <th>Role</th>
+                                <th>Section</th>
+                                <th>Qualification</th>
+                                <th>Photo</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <% if (teachers.length) { %>
+                                <% teachers.forEach((teacher)=> { %>
+                                  <% const photoSrc=teacher.img ? (teacher.img.startsWith('/') ? teacher.img : '/' +
+                                    teacher.img) : '' ; %>
+                                    <% const normalizedSection=normalizeSection(teacher.section); %>
+                                      <% const sectionText=sectionLabel(teacher.section); %>
+                                        <% const searchText=[teacher.name, teacher.role || teacher.position,
+                                          normalizedSection, sectionText, teacher.qualification,
+                                          teacher.department].filter(Boolean).join(' ').toLowerCase(); %>
+                  <tr data-teacher-row data-search-text="<%= searchText %>" data-section="<%= normalizedSection %>">
+                    <td>
+                      <strong><%= teacher.name %></strong>
+                      <span class="table-sub"><%= teacher.department || ' Public profile' %></span>
+                                          </td>
+                                          <td>
+                                            <%= roleLabel(teacher) %>
+                                          </td>
+                                          <td>
+                                            <%= sectionText %>
+                                          </td>
+                                          <td>
+                                            <%= teacher.qualification || '-' %>
+                                          </td>
+                                          <td class="teacher-photo-cell">
+                                            <% if (photoSrc) { %>
+                                              <img src="<%= photoSrc %>" alt="<%= teacher.name %>" class="teacher-thumb"
+                                                loading="lazy" decoding="async" />
+                                              <% } else { %>
+                                                <span class="teacher-thumb teacher-thumb-fallback">No Photo</span>
+                                                <% } %>
+                                          </td>
+                                          <td class="teacher-actions-cell">
+                                            <div class="teacher-action-stack">
+                                              <a href="/admin/teachers?edit=<%= teacher.id %>#teacher-form"
+                                                class="btn-ghost btn-small">Edit</a>
+                                              <form action="/admin/teachers/delete" method="POST" class="inline-form"
+                                                data-confirm="Remove this teacher?">
+                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                                                <input type="hidden" name="id" value="<%= teacher.id %>" />
+                                                <button type="submit" class="btn-danger btn-small">Remove</button>
+                                              </form>
+                                            </div>
+                                          </td>
+                                          </tr>
+                                          <% }) %>
+                                            <% } else { %>
+                                              <tr>
+                                                <td colspan="6">No team records found.</td>
+                                              </tr>
+                                              <% } %>
+                            </tbody>
+                          </table>
+                        </div>
+                  </section>
+        </section>
+    </main>
+
+    <script src="/js/script.js?v=20261003committeeform3"></script>
+  </body>
+
+  </html>

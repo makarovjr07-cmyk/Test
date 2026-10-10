@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        <%= title %>
+    </title>
+    <link rel="icon" type="image/png" href="/photos/logo-round.png?v=20260227a" />
+    <link rel="stylesheet" href="/css/style.css?v=20261003principal2" />
+</head>
+
+<body class="admin-single-tab-ready">
+    <main class="admin-layout fade-in">
+        <%- include('../partials/admin-sidebar', { activePage: 'principal' }) %>
+
+            <section class="admin-content slide-up premium-admin-content principal-admin-page">
+                <header class="principal-editor-header">
+                    <div class="principal-editor-heading">
+                        <p class="principal-editor-kicker"><span aria-hidden="true"></span> Principal Content Studio</p>
+                        <h1>Principal Messages</h1>
+                        <p class="principal-editor-subtitle">Shape the principal's voice across the school's public
+                            pages.</p>
+                        <div class="principal-editor-summary" aria-label="Content summary">
+                            <span><strong>03</strong> message sections</span>
+                            <span><strong>02</strong> public pages</span>
+                        </div>
+                    </div>
+                    <div class="principal-editor-destinations" aria-label="Open public pages">
+                        <a href="/#principal-message-home" target="_blank" rel="noopener noreferrer">
+                            <span>01 <i>Homepage</i></span>
+                            <strong>View homepage</strong>
+                        </a>
+                        <a href="/principal-message" target="_blank" rel="noopener noreferrer">
+                            <span>02 <i>Principal page</i></span>
+                            <strong>View full page</strong>
+                        </a>
+                    </div>
+                </header>
+
+                <nav class="principal-editor-nav" aria-label="Principal message sections">
+                    <a href="#principal-home"><span>01</span> Homepage message</a>
+                    <a href="#principal-intro"><span>02</span> Introduction and quote</a>
+                    <a href="#principal-full-message"><span>03</span> Full message</a>
+                </nav>
+
+                <% if (message) { %>
+                    <div class="alert alert-success">
+                        <%= message %>
+                    </div>
+                    <% } %>
+                        <% if (error) { %>
+                            <div class="alert alert-error">
+                                <%= error %>
+                            </div>
+                            <% } %>
+
+                                <form action="/admin/principal" method="POST"
+                                    class="popup-settings-form principal-editor-form" data-loading="true">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+                                    <section id="principal-home"
+                                        class="popup-settings-section principal-editor-section principal-editor-home">
+                                        <div class="principal-editor-section-head">
+                                            <span class="principal-editor-number">01</span>
+                                            <div class="principal-editor-section-title">
+                                                <p class="popup-settings-kicker">Homepage section</p>
+                                                <h2>Homepage principal message</h2>
+                                                <p class="popup-settings-subtitle">The message visitors see on the
+                                                    homepage.</p>
+                                            </div>
+                                            <a class="principal-editor-preview" href="/#principal-message-home"
+                                                target="_blank" rel="noopener noreferrer">Preview section</a>
+                                        </div>
+                                        <div class="principal-editor-fields">
+                                            <label class="principal-editor-field">
+                                                Heading
+                                                <input type="text" name="principalHomeTitle" maxlength="120"
+                                                    value="<%= popupSettings.principalHome.title %>" required />
+                                            </label>
+                                            <label class="principal-editor-field">
+                                                Greeting
+                                                <input type="text" name="principalHomeGreeting" maxlength="300"
+                                                    value="<%= popupSettings.principalHome.greeting %>" required />
+                                            </label>
+                                            <label class="principal-editor-field principal-editor-field-wide">
+                                                Message
+                                                <textarea name="principalHomeBody" rows="6" maxlength="5000"
+                                                    required><%= popupSettings.principalHome.body %></textarea>
+                                            </label>
+                                        </div>
+                                    </section>
+
+                                    <section id="principal-intro"
+                                        class="popup-settings-section principal-editor-section principal-editor-intro">
+                                        <div class="principal-editor-section-head">
+                                            <span class="principal-editor-number">02</span>
+                                            <div class="principal-editor-section-title">
+                                                <p class="popup-settings-kicker">Principal page</p>
+                                                <h2>Introduction and quote</h2>
+                                                <p class="popup-settings-subtitle">The opening message and signature
+                                                    quote on the principal page.</p>
+                                            </div>
+                                            <a class="principal-editor-preview" href="/principal-message"
+                                                target="_blank" rel="noopener noreferrer">Preview page</a>
+                                        </div>
+                                        <div class="principal-editor-fields">
+                                            <label class="principal-editor-field">
+                                                Eyebrow
+                                                <input type="text" name="principalPageEyebrow" maxlength="120"
+                                                    value="<%= popupSettings.principalPage.eyebrow %>" required />
+                                            </label>
+                                            <label class="principal-editor-field">
+                                                Main Heading
+                                                <input type="text" name="principalPageHeadline" maxlength="220"
+                                                    value="<%= popupSettings.principalPage.headline %>" required />
+                                            </label>
+                                            <label class="principal-editor-field principal-editor-field-wide">
+                                                Greeting
+                                                <input type="text" name="principalPageGreeting" maxlength="300"
+                                                    value="<%= popupSettings.principalPage.greeting %>" required />
+                                            </label>
+                                            <label class="principal-editor-field principal-editor-field-wide">
+                                                Introduction
+                                                <textarea name="principalPageBody" rows="7" maxlength="5000"
+                                                    required><%= popupSettings.principalPage.body %></textarea>
+                                            </label>
+                                            <label class="principal-editor-field principal-editor-field-wide">
+                                                Principal's Quote
+                                                <textarea name="principalPageQuote" rows="3" maxlength="1000"
+                                                    required><%= popupSettings.principalPage.quote %></textarea>
+                                            </label>
+                                        </div>
+                                    </section>
+
+                                    <section id="principal-full-message"
+                                        class="popup-settings-section principal-editor-section principal-editor-letter">
+                                        <div class="principal-editor-section-head">
+                                            <span class="principal-editor-number">03</span>
+                                            <div class="principal-editor-section-title">
+                                                <p class="popup-settings-kicker">Read more section</p>
+                                                <h2>Full message from the principal</h2>
+                                                <p class="popup-settings-subtitle">The complete letter below the
+                                                    principal page introduction.</p>
+                                            </div>
+                                            <span class="principal-editor-page-tag">Principal page</span>
+                                        </div>
+                                        <div class="principal-editor-fields">
+                                            <label class="principal-editor-field principal-editor-field-wide">
+                                                Section Heading
+                                                <input type="text" name="principalMessageTitle" maxlength="120"
+                                                    value="<%= popupSettings.principalMessage.title %>" required />
+                                            </label>
+                                            <label class="principal-editor-field principal-editor-field-wide">
+                                                Full Message
+                                                <textarea name="principalMessageBody" rows="14" maxlength="5000"
+                                                    required><%= popupSettings.principalMessage.body %></textarea>
+                                            </label>
+                                        </div>
+                                    </section>
+
+                                    <div class="principal-editor-savebar">
+                                        <div class="principal-save-indicator"><span aria-hidden="true"></span> Ready to
+                                            publish</div>
+                                        <button type="submit" class="btn-primary">Save changes</button>
+                                    </div>
+                                </form>
+            </section>
+    </main>
+</body>
+
+</html>

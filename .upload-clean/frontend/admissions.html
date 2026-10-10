@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admissions | Kankai Secondary School</title>
+  <link rel="icon" type="image/png" href="/photos/logo-round.png?v=20260227a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="styles.css?v=20260406smooth1" as="style" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260406smooth1" />
+</head>
+
+<body class="home-page admission-page">
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-left">Email : kankaima75@gmail.com | Ph: 027-412005</div>
+      <div class="topbar-social">
+        <a href="https://www.facebook.com/kankaimavi" target="_blank" rel="noopener noreferrer">Facebook</a>
+
+
+      </div>
+    </div>
+  </div>
+  <header class="header">
+    <div class="container nav">
+      <button class="apple-mobile-toggle" id="appleMobileToggle" type="button" aria-label="Open navigation menu"
+        aria-expanded="false" aria-controls="primary-nav">
+        <span></span>
+        <span></span>
+      </button>
+      <a class="brand" href="/">
+        <img class="brand-mark" src="photos/logo-round.png" alt="Kankai Secondary School logo" />
+        <span class="brand-text">Kankai Secondary School</span>
+      </a>
+      <nav class="links" id="primary-nav">
+        <a href="/">Home</a>
+        <div class="nav-item has-dropdown">
+          <a class="nav-dropdown-toggle" href="/who-we-are" data-dropdown-trigger="about" aria-haspopup="true"
+            aria-expanded="false">About Us <span class="nav-caret" aria-hidden="true">&#9662;</span></a>
+          <div class="nav-dropdown" role="menu" aria-label="About Us submenu">
+            <a href="/who-we-are" role="menuitem">Who we are?</a>
+            <a href="/our-history" role="menuitem">Our History</a>
+            <a href="/principal-message" role="menuitem">Message from the Principal</a>
+            <a href="/mission-vision" role="menuitem">Our Mission &amp; Vision</a>
+            <div class="nav-subitem has-submenu">
+              <a href="/teachers" role="menuitem" class="nav-team-link" data-submenu-trigger="team" aria-haspopup="true"
+                aria-expanded="false">Team <span class="nav-arrow" aria-hidden="true">&#8594;</span></a>
+              <div class="nav-submenu" role="menu" aria-label="Team submenu">
+                <a href="/management-committee" role="menuitem">School Management Committee</a>
+                <a href="/administrative-staff" role="menuitem">Administrative Staff</a>
+                <a href="/faculty-members" role="menuitem">Faculty Members</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="nav-item has-dropdown">
+          <a class="nav-dropdown-toggle" href="/facilities" data-dropdown-trigger="facilities" aria-haspopup="true"
+            aria-expanded="false">Facilities <span class="nav-caret" aria-hidden="true">&#9662;</span></a>
+          <div class="nav-dropdown" role="menu" aria-label="Facilities submenu">
+            <a href="/cafeteria" role="menuitem">Cafeteria</a>
+            <a href="/library" role="menuitem">Library</a>
+            <a href="/labs" role="menuitem">Computer, Science and Electronics Lab</a>
+            <a href="/first-aid" role="menuitem">First Aid</a>
+            <a href="/sports-eca" role="menuitem">Games, Sports and ECA</a>
+          </div>
+        </div>
+        <a href="/result" class="nav-result-link">Result</a>
+        <a href="/gallery">Gallery</a>
+        <a href="/notice-board">Notice</a>
+        <a class="active" href="/admissions">Admission </a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="section container admx-hero-wrap">
+      <div class="admx-hero">
+        <div class="admx-hero-copy">
+          <p class="eyebrow">Kankai Secondary School</p>
+          <h1>Admission Page</h1>
+          <p>This page provides admission information for Kankai Secondary School, including the application form and
+            admission help desk details.</p>
+          <div class="admx-actions">
+            <a href="#admission-form" class="btn btn-accent">Apply Now</a>
+            <a href="/contact" class="btn btn-secondary">Book School Visit</a>
+          </div>
+          <div class="admx-tags">
+            <span>ECD to Grade 10</span>
+            <span>Computer Engineering</span>
+            <span>Practical Learning</span>
+            <span>Admission Support</span>
+          </div>
+        </div>
+        <div class="admx-hero-media">
+          <img class="admx-image-main" src="photos/cap2.jpg" alt="Students during admission and school activities"
+            loading="lazy" decoding="async" />
+          <img class="admx-image-float" src="photos/cap3.jpg" alt="Morning assembly and school discipline"
+            loading="lazy" decoding="async" />
+        </div>
+      </div>
+    </section>
+
+    <section id="admission-form" class="section container admx-apply-wrap">
+      <div class="admx-apply-grid">
+        <form class="form-card admx-form" data-admission-form="1" action="/api/admission-request" method="post"
+          enctype="multipart/form-data">
+          <h2>Admission Application</h2>
+          <p class="admx-form-note">Please fill in the details below and attach the student's latest grade sheet and a
+            passport-size photo.</p>
+          <div class="form-grid">
+            <label>Student Name<input name="studentName" required /></label>
+            <label>Applying Grade<select name="applyingGrade" required>
+                <option value="">Select Grade</option>
+                <option>ECD</option>
+                <option>Grade 1</option>
+                <option>Grade 2</option>
+                <option>Grade 3</option>
+                <option>Grade 4</option>
+                <option>Grade 5</option>
+                <option>Grade 6</option>
+                <option>Grade 7</option>
+                <option>Grade 8</option>
+                <option>Grade 9</option>
+                <option>Grade 10</option>
+              </select></label>
+            <label>Date of Birth<input name="dateOfBirth" type="date" required /></label>
+            <label>Previous School<input name="previousSchool" /></label>
+            <label>Parent/Guardian Name<input name="parentName" required /></label>
+            <label>Phone Number<input name="phoneNumber" required /></label>
+            <label>Email<input name="email" type="email" required /></label>
+            <label>Address<input name="address" required /></label>
+            <label>Latest Grade Sheet<input name="latestGradeSheet" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp"
+                required /></label>
+            <label>Student Photo<input name="studentPhoto" type="file" accept=".jpg,.jpeg,.png,.webp"
+                required /></label>
+            <label class="full">Additional Notes<textarea name="additionalNotes" rows="4"></textarea></label>
+            <button class="btn btn-accent" type="submit">Submit Admission Request</button>
+          </div>
+          <p class="form-status" aria-live="polite"></p>
+        </form>
+        <aside class="panel admx-help-card">
+          <h3>Admission Help Desk</h3>
+          <p class="admx-help-intro">Need quick support? Our team is ready to help you instantly.</p>
+          <div class="admx-docs-card">
+            <h4>Documents To Bring</h4>
+            <ul class="admx-docs-list">
+              <li>Latest grade sheet / mark sheet copy</li>
+              <li>Student passport-size photo</li>
+              <li>Basic guardian contact details</li>
+            </ul>
+          </div>
+          <div class="admx-contact-list">
+            <p><span>Principal Phone</span><a href="tel:9843713487">9843713487</a></p>
+            <p><span>School Phone</span><a href="tel:027412005">027-412005</a></p>
+            <p><span>Email</span><a href="mailto:kankaima75@gmail.com">kankaima75@gmail.com</a></p>
+            <p><span>Location</span>Mai Nagarpalika-4, Danabari, Sitali, Ilam</p>
+            <p><span>Hours</span>Monday-Friday, 10:00 AM-4:00 PM</p>
+          </div>
+          <a href="tel:027412005" class="btn btn-accent admx-call-btn">Call Now</a>
+          <a href="mailto:kankaima75@gmail.com" class="btn btn-secondary admx-mail-btn">Email Admission Desk</a>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Kankai Secondary School</h3>
+        <p>Quality education with discipline and practical skills.</p>
+      </div>
+      <div>
+        <h3>Address</h3>
+        <p>Mai Nagarpalika-4, Danabari, Sitali, Ilam</p>
+      </div>
+      <div>
+        <h3>Contact</h3>
+        <p>027-412005</p>
+        <p>Principal: 9843713487</p>
+        <p>kankaima75@gmail.com</p>
+      </div>
+    </div>
+    <div class="container footer-inner">
+      <div class="footer-contact-strip">
+        <span>Email : kankaima75@gmail.com | Ph: 027-412005</span>
+      </div>
+      <div class="footer-social-strip">
+        <a href="https://www.facebook.com/kankaimavi" target="_blank" rel="noopener noreferrer"
+          aria-label="Facebook"><span class="social-icon">f</span>Facebook</a>
+
+
+      </div>
+      <div class="footer-dev-credit">
+        <img src="/photos/developer-photo.jpeg" alt="Developer Anish Pandey" class="footer-dev-photo" loading="lazy"
+          decoding="async" />
+        <div class="footer-dev-text">
+          <p class="footer-dev-kicker">Developed by</p>
+          <strong>Anish Pandey</strong>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="script.js?v=20260408noticefix1" defer></script>
+</body>
+
+</html>

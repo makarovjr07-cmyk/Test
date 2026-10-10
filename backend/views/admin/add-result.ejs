@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+  <link rel="icon" type="image/png" href="/photos/logo-round.png?v=20260227a" />
+    <link rel="stylesheet" href="/css/style.css?v=20261001subjectmode3" />
+  </head>
+  <body class="admin-single-tab-ready">
+    <main class="admin-layout fade-in">
+      <%- include('../partials/admin-sidebar', { activePage: 'add-result' }) %>
+
+      <section class="admin-content slide-up add-result-page">
+        <header class="admin-page-head glass-card">
+          <div>
+            <h1>Add Student Result</h1>
+            <p class="admin-page-subtitle">Manage student results with a structured NEB-style entry workflow.</p>
+          </div>
+          <div class="admin-page-metrics">
+            <div class="metric-chip">
+              <span>Mode</span>
+              <strong>Manual Entry</strong>
+            </div>
+            <div class="metric-chip">
+              <span>Subjects</span>
+              <strong id="subjectCountBadge"><%= Number(formData.subjectCount) || 6 %> Rows</strong>
+            </div>
+          </div>
+        </header>
+
+        <% if (error) { %>
+        <div class="alert alert-error shake-error"><%= error %></div>
+        <% } %>
+        <% if (success) { %>
+        <div class="alert alert-success"><%= success %></div>
+        <% } %>
+
+        <form
+          action="/admin/save-result"
+          method="POST"
+          class="glass-card result-form neb-add-form neb-premium-form"
+          data-loading="true"
+          autocomplete="off"
+        >
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <section class="glass-soft form-section">
+            <div class="section-title-wrap">
+              <h3>Student Details</h3>
+              <p>Enter symbol, student profile and exam information.</p>
+            </div>
+
+            <div class="form-grid">
+              <div>
+                <label for="symbolNumber">Symbol Number</label>
+                <input
+                  id="symbolNumber"
+                  class="js-uppercase"
+                  name="symbolNumber"
+                  type="text"
+                  required
+                  autocomplete="off"
+                  autocorrect="off"
+                  spellcheck="false"
+                  value="<%= formData.symbolNumber %>"
+                />
+              </div>
+              <div>
+                <label for="studentName">Student Name</label>
+                <input id="studentName" name="studentName" type="text" required value="<%= formData.studentName %>" />
+              </div>
+              <% const classOptions = ['Class 9', 'Class 10', 'Class 11', 'Class 12']; %>
+              <% const selectedClass = String(formData.class || '').trim(); %>
+              <div>
+                <label for="class">Class</label>
+                <select id="class" name="class" required>
+                  <% classOptions.forEach((item) => { %>
+                  <option value="<%= item %>" <%= selectedClass === item ? 'selected' : '' %>><%= item %></option>
+                  <% }) %>
+                  <% if (selectedClass && !classOptions.includes(selectedClass)) { %>
+                  <option value="<%= selectedClass %>" selected><%= selectedClass %></option>
+                  <% } %>
+                </select>
+              </div>
+              <div>
+                <label for="section">Section</label>
+                <select id="section" name="section">
+                  <option value="" <%= !formData.section ? 'selected' : '' %>>No Section</option>
+                  <% ['A', 'B', 'C'].forEach((item) => { %>
+                  <option value="<%= item %>" <%= String(formData.section || '').toUpperCase() === item ? 'selected' : '' %>><%= item %></option>
+                  <% }) %>
+                </select>
+              </div>
+              <div>
+                <label for="examType">Exam Type</label>
+                <input id="examType" name="examType" type="text" value="<%= formData.examType %>" placeholder="First term" />
+              </div>
+              <div>
+                <label for="dateOfBirth">Date Of Birth</label>
+                <input id="dateOfBirth" name="dateOfBirth" type="text" value="<%= formData.dateOfBirth %>" placeholder="2059/10/09" />
+              </div>
+              <div>
+                <label for="subjectCount">Number of subjects</label>
+                <select id="subjectCount" name="subjectCount" class="subject-count-select">
+                  <% [6, 7, 8, 9].forEach((count) => { %>
+                  <option value="<%= count %>" <%= Number(formData.subjectCount) === count ? 'selected' : '' %>><%= count %></option>
+                  <% }) %>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <section class="subject-manager-block">
+            <div class="subject-manager-head">
+              <div>
+                <h3>Subjects</h3>
+                <p class="subject-form-note">
+                  Fill all rows. Choose one mark split button for each subject: `75/25` or `50/50`. Students who fail INR will be marked NG.
+                </p>
+              </div>
+              <span class="subject-live-count" id="subjectLiveCount"><%= Number(formData.subjectCount) || 6 %> / 9</span>
+            </div>
+          <div class="subject-columns" aria-hidden="true">
+            <span>Subject Name</span>
+            <span>Credit Hour</span>
+            <span>Mark Split</span>
+            <span>TH Marks</span>
+            <span>INR Marks</span>
+            <span>Action</span>
+          </div>
+          <div id="subjectsContainer" class="subjects-grid">
+            <% formData.subjects.forEach((subject, index) => { %>
+            <div class="subject-row glass-soft" data-subject-row>
+              <input name="subjectName[]" type="text" placeholder="Subject Name" required value="<%= subject.name %>" />
+              <input name="credit[]" type="number" min="0" step="0.01" placeholder="Credit Hour" value="<%= subject.credit || '4' %>" required />
+              <% const subjectMode = String(subject.mode || '').trim() === '50-50' ? '50-50' : '75-25'; %>
+              <% const theoryMax = subjectMode === '50-50' ? 50 : 75; %>
+              <% const practicalMax = subjectMode === '50-50' ? 50 : 25; %>
+              <div class="subject-mode-group" data-subject-mode-group>
+                <input type="hidden" name="subjectMode[]" value="<%= subjectMode %>" />
+                <button type="button" class="subject-mode-option <%= subjectMode === '75-25' ? 'is-active' : '' %>" data-mode-button data-mode="75-25" aria-pressed="<%= subjectMode === '75-25' ? 'true' : 'false' %>">75 / 25</button>
+                <button type="button" class="subject-mode-option <%= subjectMode === '50-50' ? 'is-active' : '' %>" data-mode-button data-mode="50-50" aria-pressed="<%= subjectMode === '50-50' ? 'true' : 'false' %>">50 / 50</button>
+              </div>
+              <input name="th[]" type="number" min="0" max="<%= theoryMax %>" step="0.01" placeholder="TH (0-<%= theoryMax %>)" value="<%= subject.th %>" required />
+              <input name="pr[]" type="number" min="0" max="<%= practicalMax %>" step="0.01" placeholder="INR (0-<%= practicalMax %>)" value="<%= (subject.pr === '' || subject.pr === null || typeof subject.pr === 'undefined') ? '0' : subject.pr %>" required />
+              <button type="button" class="btn-remove-subject" <%= Number(formData.subjectCount) <= 6 && index >= 5 ? 'disabled' : '' %>>Remove</button>
+            </div>
+            <% }) %>
+          </div>
+          </section>
+
+          <div class="form-actions result-form-actions">
+            <button type="button" id="addSubjectRow" class="btn-ghost">+ Add Subject</button>
+            <button type="submit" class="btn-primary glow-on-hover">Save Result</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script src="/js/script.js?v=20261001computermode2"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

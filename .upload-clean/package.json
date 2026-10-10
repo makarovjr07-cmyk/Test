@@ -1,0 +1,34 @@
+{
+  "name": "kankai-result-portal",
+  "version": "1.0.0",
+  "description": "Kankai Secondary School Result Portal",
+  "main": "backend/app.js",
+  "engines": {
+    "node": ">=24.13.1 <25",
+    "npm": ">=11.19.0 <12"
+  },
+  "scripts": {
+    "start": "node backend/cluster.js",
+    "start:single": "node backend/app.js",
+    "dev": "node scripts/kill-port.js && nodemon",
+    "dev:paste": "powershell -ExecutionPolicy Bypass -File ./run-dev-with-uri.ps1",
+    "optimize:images": "powershell -ExecutionPolicy Bypass -File ./scripts/optimize-images.ps1",
+    "optimize:gallery-thumbs": "powershell -ExecutionPolicy Bypass -File ./scripts/generate-gallery-thumbnails.ps1"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.8.1",
+    "connect-mongo": "^6.0.0",
+    "dotenv": "^17.3.1",
+    "ejs": "^3.1.10",
+    "express": "^4.22.1",
+    "express-session": "^1.19.0",
+    "mongoose": "^8.23.0",
+    "multer": "^2.1.1",
+    "nodemailer": "^10.0.13"
+  },
+  "devDependencies": {
+    "kill-port": "^2.0.1",
+    "nodemon": "^3.1.9"
+  }
+}

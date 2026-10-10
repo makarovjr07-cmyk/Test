@@ -1,0 +1,72 @@
+<div class="topbar no-print">
+  <div class="container topbar-inner">
+    <div class="topbar-left">Email : kankaima75@gmail.com | Ph: 027-412005</div>
+    <div class="topbar-social">
+      <a href="https://www.facebook.com/kankaimavi" target="_blank" rel="noopener noreferrer">Facebook</a>
+
+
+    </div>
+  </div>
+</div>
+
+<header class="header no-print">
+  <div class="container nav">
+    <a class="brand" href="/">
+      <img class="brand-mark" src="/photos/logo-round.png" alt="Kankai Secondary School logo" />
+      <span class="brand-text">Kankai Secondary School</span>
+    </a>
+    <nav class="links" id="primary-nav">
+      <a href="/" class="<%= currentPath === '/' || currentPath === '/index.html' ? 'active' : '' %>">Home</a>
+      <div class="nav-item has-dropdown">
+        <a class="nav-dropdown-toggle" href="/who-we-are" data-dropdown-trigger="about" aria-haspopup="true"
+          aria-expanded="false">
+          About Us <span class="nav-caret" aria-hidden="true">&#9662;</span>
+        </a>
+        <div class="nav-dropdown" role="menu" aria-label="About Us submenu">
+          <a href="/who-we-are" role="menuitem">Who we are?</a>
+          <a href="/our-history" role="menuitem">Our History</a>
+          <a href="/principal-message" role="menuitem">Message from the Principal</a>
+          <a href="/mission-vision" role="menuitem">Our Mission &amp; Vision</a>
+          <div class="nav-subitem has-submenu">
+            <a href="/teachers" role="menuitem" class="nav-team-link" data-submenu-trigger="team" aria-haspopup="true"
+              aria-expanded="false">
+              Team <span class="nav-arrow" aria-hidden="true">&#8594;</span>
+            </a>
+            <div class="nav-submenu" role="menu" aria-label="Team submenu">
+              <a href="/management-committee" role="menuitem">School Management Committee</a>
+              <a href="/administrative-staff" role="menuitem">Administrative Staff</a>
+              <a href="/faculty-members" role="menuitem">Faculty Members</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item has-dropdown">
+        <a class="nav-dropdown-toggle" href="#" data-dropdown-trigger="facilities" aria-haspopup="true"
+          aria-expanded="false">
+          Facilities <span class="nav-caret" aria-hidden="true">&#9662;</span>
+        </a>
+        <div class="nav-dropdown" role="menu" aria-label="Facilities submenu">
+          <a href="/cafeteria" role="menuitem">Cafeteria</a>
+          <a href="/library" role="menuitem">Library</a>
+          <a href="/labs" role="menuitem">Computer, Science and Electronics Lab</a>
+          <a href="/first-aid" role="menuitem">First Aid</a>
+          <a href="/sports-eca" role="menuitem">Games, Sports and ECA</a>
+        </div>
+      </div>
+      <% if (typeof resultPortalEnabled==='undefined' || resultPortalEnabled) { %>
+        <a href="/result"
+          class="nav-result-link <%= currentPath === '/result' || currentPath.startsWith('/admin') ? 'active' : '' %>">Result</a>
+        <% } %>
+          <a href="/gallery" class="<%= currentPath === '/gallery' ? 'active' : '' %>">Gallery</a>
+          <a href="/notice-board" class="<%= currentPath === '/notice-board' ? 'active' : '' %>">Notice</a>
+          <a href="/admissions" class="<%= currentPath === '/admissions' ? 'active' : '' %>">Admission</a>
+          <a href="/contact" class="<%= currentPath === '/contact' ? 'active' : '' %>">Contact</a>
+    </nav>
+    <button class="apple-mobile-toggle" id="appleMobileToggle" type="button" aria-label="Open navigation menu"
+      aria-expanded="false" aria-controls="primary-nav">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>

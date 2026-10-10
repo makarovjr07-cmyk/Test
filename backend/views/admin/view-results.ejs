@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+  <link rel="icon" type="image/png" href="/photos/logo-round.png?v=20260227a" />
+    <link rel="stylesheet" href="/css/style.css?v=20260930adminpremium17" />
+  </head>
+  <body class="admin-single-tab-ready">
+    <main class="admin-layout fade-in">
+      <%- include('../partials/admin-sidebar', { activePage: 'view-results' }) %>
+
+      <section class="admin-content slide-up premium-admin-content">
+        <header class="admin-page-head glass-card premium-page-head">
+          <div>
+            <p class="admin-head-kicker">Result Records</p>
+            <h1>All Student Results</h1>
+            <p class="admin-page-subtitle">Manage, review, and validate all published records in one organized view.</p>
+          </div>
+          <div class="admin-page-metrics">
+            <div class="metric-chip">
+              <span>Total Records</span>
+              <strong><%= results.length %></strong>
+            </div>
+            <div class="metric-chip">
+              <span>Sort Order</span>
+              <strong>Newest First</strong>
+            </div>
+          </div>
+        </header>
+
+        <% if (message) { %>
+        <div class="alert alert-success"><%= message %></div>
+        <% } %>
+
+        <div class="admin-quick-actions">
+          <a href="/admin/add-result" class="btn-primary">+ Add Result</a>
+          <a href="/admin/dashboard" class="btn-ghost">Back to Dashboard</a>
+        </div>
+
+        <section class="glass-card premium-table-card">
+          <div class="managed-table-head">
+            <h3>Result List</h3>
+            <span>Showing <%= results.length %> record(s)</span>
+          </div>
+          <% if (results.length === 0) { %>
+          <p class="empty-state">No results in database.</p>
+          <% } else { %>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Symbol Number</th>
+                  <th>Student Name</th>
+                  <th>Class</th>
+                  <th>Section</th>
+                  <th>Exam</th>
+                  <th>GPA</th>
+                  <th>Result</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% results.forEach((item) => { %>
+                <%
+                  const failingGradeValues = new Set(['F', 'NG']);
+                  const hasFailingSubject = Array.isArray(item.subjects)
+                    && item.subjects.some((subject) => failingGradeValues.has(String(subject.finalGrade || subject.grade || '').trim().toUpperCase()));
+                  const overallGradeValue = String(item.overallGrade || '').trim().toUpperCase();
+                  const shouldShowNg = overallGradeValue === 'NG' || overallGradeValue === 'F' || hasFailingSubject;
+                  const resultStatus = shouldShowNg ? 'Fail' : 'Pass';
+                  const overallGpaValue = Number(item.overallGPA);
+                  const overallGpaDisplay = shouldShowNg
+                    ? 'NG'
+                    : (Number.isFinite(overallGpaValue) ? overallGpaValue.toFixed(3) : String(item.overallGPA || '-'));
+                %>
+                <tr>
+                  <td><%= item.symbolNumber %></td>
+                  <td><%= item.studentName %></td>
+                  <td><%= item.class %></td>
+                  <td><%= item.section || '-' %></td>
+                  <td><%= item.examType %></td>
+                  <td><%= overallGpaDisplay %></td>
+                  <td><%= resultStatus %></td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+          <% } %>
+        </section>
+      </section>
+    </main>
+
+    <script src="/js/script.js?v=20260409adminux1"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,25 @@
+node_modules
+.next
+.env
+.env.*
+.env.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+nodemon.log
+*.log
+.edge-headless-profile/
+* - Copy.*
+server-smoke*.out
+server-smoke*.err
+server-upload-check*.out
+server-upload-check*.err
+storage/
+.storage/
+.gallery-trash/
+.gallery-cache-signal
+.mirror-ready
+gallery-hidden-photos.json
+.gallery-hidden-photos.json
+!backend/data/gallery-hidden-photos.json

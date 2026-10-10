@@ -1,0 +1,35 @@
+<aside class="sidebar glass-card admin-sidebar-premium" data-admin-session-guard
+  data-admin-idle-timeout="<%= adminIdleTimeoutMs %>" data-admin-session-status-url="<%= adminSessionStatusUrl %>"
+  data-admin-lock-url="<%= adminLockUrl %>" data-admin-csrf-token="<%= csrfToken %>">
+  <div class="admin-sidebar-head">
+    <img src="/photos/logo.png" alt="Kankai School Logo" class="admin-sidebar-logo" />
+    <div>
+      <p class="admin-sidebar-kicker">Kankai Secondary School</p>
+      <h2>Admin Panel</h2>
+    </div>
+  </div>
+
+  <div class="admin-sidebar-meta">
+    <span class="admin-sidebar-badge">Secure session</span>
+    <span class="admin-sidebar-badge">School operations</span>
+  </div>
+
+  <nav aria-label="Admin navigation">
+    <p class="admin-nav-label">Workspace</p>
+    <a href="/admin/dashboard" class="<%= activePage === 'dashboard' ? 'active' : '' %>">Dashboard</a>
+    <a href="/admin/notices" class="<%= activePage === 'notices' ? 'active' : '' %>">Notice</a>
+    <a href="/admin/principal" class="<%= activePage === 'principal' ? 'active' : '' %>">Principal</a>
+    <a href="/admin/teachers" class="<%= activePage === 'teachers' ? 'active' : '' %>">Teachers</a>
+    <a href="/admin/gallery" class="<%= activePage === 'gallery' ? 'active' : '' %>">Gallery</a>
+    <a href="/admin/add-result" class="<%= activePage === 'add-result' ? 'active' : '' %>">Add Result</a>
+    <a href="/admin/view-results" class="<%= activePage === 'view-results' ? 'active' : '' %>">View Results</a>
+    <a href="/admin/clear-db" class="<%= activePage === 'clear-db' ? 'active danger-link' : 'danger-link' %>">Clear
+      Database</a>
+    <p class="admin-nav-label admin-nav-label-system">System</p>
+    <form action="/admin/logout" method="POST" class="admin-sidebar-form" data-admin-logout-form>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <input type="hidden" name="next" value="/" />
+      <button type="submit" class="admin-sidebar-link-button">Logout</button>
+    </form>
+  </nav>
+</aside>

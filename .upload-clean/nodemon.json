@@ -1,0 +1,6 @@
+{
+  "watch": ["backend"],
+  "ext": "js,json,ejs",
+  "ignore": ["nodemon.log", "node_modules", "backend/data", "frontend"],
+  "exec": "node backend/app.js"
+}

@@ -1,0 +1,251 @@
+<%
+  const totalAlbums = albums.length;
+  const totalPhotos = albums.reduce((sum, album) => sum + album.photoCount, 0);
+  const emptyAlbums = albums.filter((album) => album.photoCount === 0).length;
+%>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="icon" type="image/png" href="/photos/logo-round.png?v=20260227a" />
+    <link rel="stylesheet" href="/css/style.css?v=20260930gallery23" />
+  </head>
+  <body class="admin-single-tab-ready">
+    <main class="admin-layout fade-in">
+      <%- include('../partials/admin-sidebar', { activePage: 'gallery' }) %>
+
+      <section
+        class="admin-content slide-up premium-admin-content gallery-admin-page"
+        data-gallery-admin-page
+        data-csrf-token="<%= csrfToken %>"
+        data-gallery-version="<%= galleryVersion %>"
+      >
+        <header class="admin-page-head glass-card premium-page-head gallery-admin-head">
+          <div>
+            <p class="admin-head-kicker">Content Workspace</p>
+            <h1>Gallery Studio</h1>
+            <p class="admin-page-subtitle">
+              Organize albums, upload polished media, and keep the public gallery current from one clear workspace.
+            </p>
+          </div>
+          <div class="admin-page-metrics gallery-admin-metrics">
+            <div class="metric-chip">
+              <span>Total Albums</span>
+              <strong data-gallery-total-albums><%= totalAlbums %></strong>
+            </div>
+            <div class="metric-chip">
+              <span>Total Photos</span>
+              <strong data-gallery-total-photos><%= totalPhotos %></strong>
+            </div>
+            <div class="metric-chip">
+              <span>Empty Albums</span>
+              <strong data-gallery-empty-albums><%= emptyAlbums %></strong>
+            </div>
+          </div>
+        </header>
+
+        <% if (message) { %>
+        <div class="alert alert-success"><%= message %></div>
+        <% } %>
+        <% if (error) { %>
+        <div class="alert alert-error"><%= error %></div>
+        <% } %>
+
+        <section class="gallery-admin-create-grid">
+          <section class="glass-card popup-settings-section gallery-admin-create-card">
+            <div class="popup-settings-head">
+              <div>
+              <p class="popup-settings-kicker">New collection</p>
+                <h3>Create an album</h3>
+                <p class="popup-settings-subtitle">
+                  Give this collection a clear name. It will appear on the public gallery as soon as you add media.
+                </p>
+              </div>
+              <span class="popup-settings-chip">Ready to publish</span>
+            </div>
+
+            <form action="/admin/gallery/albums" method="POST" class="popup-settings-form gallery-admin-create-form">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+              <label>
+                Album Name
+                <input
+                  type="text"
+                  name="albumName"
+                  placeholder="Sports Day"
+                  maxlength="80"
+                  required
+                />
+              </label>
+              <div class="popup-control-actions">
+                <button type="submit" class="btn-primary">Create Album</button>
+              </div>
+            </form>
+          </section>
+
+          <aside class="glass-card gallery-admin-help-card">
+            <p class="teacher-side-kicker">Media standards</p>
+            <h3>Built for fast publishing</h3>
+            <ul class="teacher-playbook-list gallery-admin-playbook">
+              <li>Drop multiple photos or short videos into any album.</li>
+              <li>Photos are optimized in the browser before upload for a faster gallery.</li>
+              <li>Updates are reflected on the public gallery automatically.</li>
+            </ul>
+          </aside>
+        </section>
+
+        <section class="glass-card premium-table-card gallery-admin-albums-card">
+          <div class="managed-table-head gallery-admin-table-head">
+            <div>
+              <p class="popup-settings-kicker">Collection library</p>
+              <h3>Your albums</h3>
+              <p class="popup-settings-subtitle">Manage media, check the contents of each collection, and publish updates without leaving this page.</p>
+            </div>
+          </div>
+
+          <% if (!albums.length) { %>
+          <div class="empty-state gallery-admin-empty">
+            No gallery albums found yet. Create your first album above, then upload photos into it.
+          </div>
+          <% } else { %>
+          <div class="gallery-admin-album-list">
+            <% albums.forEach((album) => { %>
+            <article
+              class="gallery-admin-album<%= album.photos.length > 6 ? ' is-collapsed' : '' %>"
+              id="<%= album.anchor %>"
+              data-gallery-album
+              data-gallery-album-name="<%= album.name %>"
+            >
+              <div class="gallery-admin-album-head">
+                <div class="gallery-admin-album-copy">
+                  <p class="gallery-admin-album-kicker">Album Folder</p>
+                  <h4><%= album.label %></h4>
+                  <div class="gallery-admin-album-meta">
+                    <span data-gallery-album-photo-count><%= album.photoCount %> photo<%= album.photoCount === 1 ? '' : 's' %></span>
+                    <span><code><%= album.folderPath %></code></span>
+                  </div>
+                </div>
+                <span class="gallery-admin-album-state"><%= album.photoCount ? 'Published' : 'Draft' %></span>
+                <div class="gallery-admin-album-actions">
+                  <div
+                    class="gallery-admin-upload-box"
+                    data-gallery-upload-box
+                    data-album-name="<%= album.name %>"
+                    data-album-anchor="<%= album.anchor %>"
+                  >
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm"
+                      multiple
+                      data-gallery-file-input
+                      hidden
+                    />
+                    <button type="button" class="btn-ghost btn-small" data-gallery-file-trigger>
+                      Add media
+                    </button>
+                    <p class="gallery-admin-upload-status" data-gallery-upload-status>
+                      Drop files here or choose from your device.
+                    </p>
+                    <span class="gallery-admin-upload-hint">JPG, PNG, WEBP, GIF, MP4, WEBM</span>
+                  </div>
+
+                  <form
+                    action="/admin/gallery/albums/delete"
+                    method="POST"
+                    class="inline-form"
+                    data-confirm="Delete this album and all photos inside it?"
+                  >
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <input type="hidden" name="albumName" value="<%= album.name %>" />
+                    <button type="submit" class="btn-danger btn-small">Delete Album</button>
+                  </form>
+                </div>
+              </div>
+
+              <% if (!album.photos.length) { %>
+              <div class="empty-state gallery-admin-empty gallery-admin-empty-inline" data-gallery-empty-state>
+                This album is empty. Upload photos to make it appear on the public gallery.
+              </div>
+              <% } else { %>
+              <div class="gallery-admin-photo-grid" data-gallery-photo-grid>
+                <% album.photos.forEach((photo) => { %>
+                <article class="gallery-admin-photo-card">
+                  <div class="gallery-admin-photo-media">
+                    <% if (photo.mediaType === 'video') { %>
+                    <video
+                      src="/<%= photo.path %>?v=<%= photo.version %>"
+                      <% if (photo.thumbnailPath) { %>poster="/<%= photo.thumbnailPath %>?v=<%= photo.thumbnailVersion %>"<% } %>
+                      <% if (photo.muted !== false) { %>muted<% } %>
+                      playsinline
+                      controls
+                      preload="metadata"
+                    ></video>
+                    <% } else { %>
+                    <img src="/<%= photo.thumbnailPath || photo.path %>?v=<%= photo.thumbnailPath ? photo.thumbnailVersion : photo.version %>" alt="<%= album.label %> photo" loading="lazy" decoding="async" />
+                    <% } %>
+                    <span class="gallery-admin-media-type"><%= photo.mediaType === 'video' ? 'Video' : 'Photo' %></span>
+                  </div>
+                  <div class="gallery-admin-photo-copy">
+                    <strong title="<%= photo.name %>"><%= photo.name %></strong>
+                    <span><%= photo.sizeLabel %> &middot; <%= photo.modifiedLabel %></span>
+                    <% if (photo.mediaType === 'video') { %>
+                    <span><%= photo.muted === false ? 'Video audio: unmuted' : 'Video audio: muted' %></span>
+                    <form
+                      action="/admin/gallery/photos/audio"
+                      method="POST"
+                      class="inline-form gallery-admin-photo-form gallery-admin-audio-form"
+                    >
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                      <input type="hidden" name="albumName" value="<%= album.name %>" />
+                      <input type="hidden" name="photoName" value="<%= photo.name %>" />
+                      <label class="gallery-admin-video-audio">
+                        <input type="checkbox" name="muted" value="1" <%= photo.muted !== false ? 'checked' : '' %> />
+                        Mute video
+                      </label>
+                      <button type="submit" class="btn-ghost btn-small">Save Audio</button>
+                    </form>
+                    <% } %>
+                  </div>
+                  <form
+                    action="/admin/gallery/photos/delete"
+                    method="POST"
+                    class="inline-form gallery-admin-photo-form"
+                    data-confirm="Remove this photo from the album?"
+                  >
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <input type="hidden" name="albumName" value="<%= album.name %>" />
+                    <input type="hidden" name="photoName" value="<%= photo.name %>" />
+                    <button type="submit" class="btn-danger btn-small">Remove</button>
+                  </form>
+                </article>
+                <% }) %>
+              </div>
+              <% if (album.photos.length > 6) { %>
+              <div class="gallery-admin-toggle-wrap">
+                <button
+                  type="button"
+                  class="btn-ghost btn-small gallery-admin-toggle"
+                  data-gallery-album-toggle
+                  data-show-more-label="Show More Photos"
+                  data-show-less-label="Show Less Photos"
+                  aria-expanded="false"
+                >
+                  Show More Photos
+                </button>
+              </div>
+              <% } %>
+              <% } %>
+            </article>
+            <% }) %>
+          </div>
+          <% } %>
+        </section>
+      </section>
+    </main>
+
+    <script src="/js/script.js?v=20260930gallery23"></script>
+  </body>
+</html>
+
+

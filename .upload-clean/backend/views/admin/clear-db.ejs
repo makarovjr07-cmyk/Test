@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+  <link rel="icon" type="image/png" href="/photos/logo-round.png?v=20260227a" />
+    <link rel="stylesheet" href="/css/style.css?v=20260930adminpremium17" />
+  </head>
+  <body class="admin-single-tab-ready">
+    <main class="admin-layout fade-in danger-layout">
+      <%- include('../partials/admin-sidebar', { activePage: 'clear-db' }) %>
+
+      <section class="admin-content slide-up premium-admin-content">
+        <header class="admin-page-head glass-card premium-page-head premium-danger-head">
+          <div>
+            <p class="admin-head-kicker">Danger Zone</p>
+            <h1>Clear Database</h1>
+            <p class="admin-page-subtitle">This is a permanent action. Use only for reset or emergency cleanup operations.</p>
+          </div>
+          <div class="admin-page-metrics">
+            <div class="metric-chip">
+              <span>Risk Level</span>
+              <strong>Critical</strong>
+            </div>
+            <div class="metric-chip">
+              <span>Recovery</span>
+              <strong>Not Possible</strong>
+            </div>
+          </div>
+        </header>
+
+        <% if (error) { %>
+        <div class="alert alert-error shake-error"><%= error %></div>
+        <% } %>
+        <% if (success) { %>
+        <div class="alert alert-success"><%= success %></div>
+        <% } %>
+
+        <div class="danger-workspace">
+          <section class="glass-card danger-info-banner">
+            <h3>Before you continue</h3>
+            <p>All student records will be deleted permanently from the result database.</p>
+            <p>Confirm carefully and provide the security password to proceed.</p>
+            <ul class="danger-checklist">
+              <li>Step 1: Confirm the permanent delete checkbox.</li>
+              <li>Step 2: Enter the exact admin security password.</li>
+              <li>Step 3: Review the export popup and confirm backup before final delete.</li>
+              <li>Deletion runs instantly after submit and cannot be reversed.</li>
+            </ul>
+          </section>
+
+          <form action="/admin/clear-db" method="POST" class="glass-card danger-card premium-danger-card" data-loading="true" id="clearDbForm">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <div class="danger-form-head">
+              <h3>Final Confirmation</h3>
+              <p>Complete the security confirmation below, then approve the final export popup to execute permanent deletion.</p>
+            </div>
+
+            <div class="danger-risk-tags">
+              <span>Permanent Delete</span>
+              <span>No Recovery</span>
+              <span>Admin Only</span>
+            </div>
+
+            <label class="inline-check danger-confirm-box" for="confirmDelete">
+              <input id="confirmDelete" name="confirmDelete" type="checkbox" />
+              <span>I understand this will delete all results.</span>
+            </label>
+
+            <div class="danger-password-wrap">
+              <label for="adminPassword">Security Password</label>
+              <div class="password-field">
+                <input id="adminPassword" name="adminPassword" type="password" placeholder="Enter clear DB password" autocomplete="current-password" required />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  data-password-toggle="adminPassword"
+                  aria-pressed="false"
+                  aria-label="Show password"
+                >
+                  Show
+                </button>
+              </div>
+              <p class="danger-password-note">Enter the configured security phrase exactly to continue.</p>
+            </div>
+
+            <div class="danger-action-row">
+              <button type="submit" class="btn-danger">Delete All Results</button>
+              <p class="danger-action-note">Action runs immediately after submit.</p>
+            </div>
+
+            <div class="danger-popup-overlay" id="clearDbPopup" hidden>
+              <div class="danger-popup-card glass-card" role="dialog" aria-modal="true" aria-labelledby="clearDbPopupTitle">
+                <div class="danger-popup-head">
+                  <p class="popup-settings-kicker">Final Step</p>
+                  <h3 id="clearDbPopupTitle">Export all data to Excel?</h3>
+                  <p class="danger-popup-copy">
+                    Before deleting all result data, export the Excel backup. Then check yes and click the final delete button below.
+                  </p>
+                </div>
+                <div class="danger-export-actions danger-popup-actions">
+                  <a href="/admin/export-results" class="btn-ghost">Export All Data</a>
+                  <label class="inline-check danger-confirm-box danger-export-confirm" for="confirmExport">
+                    <input id="confirmExport" name="confirmExport" type="checkbox" />
+                    <span>Yes, I did.</span>
+                  </label>
+                </div>
+                <div class="danger-popup-footer">
+                  <button type="button" class="btn-ghost" id="clearDbPopupCancel">Cancel</button>
+                  <button type="submit" class="btn-danger" id="clearDbPopupSubmit">Delete All Data</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <script src="/js/script.js?v=20260409adminux1"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

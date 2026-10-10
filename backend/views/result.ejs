@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="icon" type="image/png" href="/photos/logo-round.png?v=20260227a" />
+    <link rel="stylesheet" href="/css/style.css?v=20260508classicmarksheet1" />
+  </head>
+  <body class="result-view-page">
+    <%- include('partials/portal-nav', { resultPortalEnabled: resultPortal?.enabled !== false }) %>
+    <main class="page-shell fade-in">
+      <% if (notFound) { %>
+      <section class="glass-card not-found-card">
+        <div class="not-found-copy">
+          <h1>Result Not Found</h1>
+          <p><%= errorMessage %></p>
+          <% if (symbolNumber) { %>
+          <p class="symbol-ref">Symbol Number: <strong><%= symbolNumber %></strong></p>
+          <% } %>
+        </div>
+        <div class="result-actions no-print">
+          <a class="btn-primary" href="/result">Try Again</a>
+        </div>
+      </section>
+      <% } else { %>
+      <%
+        const overallGradeValue = String(result.overallGrade || '').trim().toUpperCase();
+        const failingGradeValues = new Set(['F', 'NG']);
+        const hasFailingSubject = Array.isArray(result.subjects)
+          && result.subjects.some((subject) => failingGradeValues.has(String(subject.finalGrade || subject.grade || '').trim().toUpperCase()));
+        const isOverallNg = overallGradeValue === 'NG' || overallGradeValue === 'F' || hasFailingSubject;
+        const resultStatus = isOverallNg ? 'Fail' : 'Pass';
+        const overallGpaValue = Number(result.overallGPA);
+        const overallGpaDisplay = isOverallNg
+          ? 'NG'
+          : (Number.isFinite(overallGpaValue) ? overallGpaValue.toFixed(2) : String(result.overallGPA || '-'));
+
+        function toGradeBand(score) {
+          if (score >= 90) return { grade: 'A+', gpa: 4.0 };
+          if (score >= 80) return { grade: 'A', gpa: 3.6 };
+          if (score >= 70) return { grade: 'B+', gpa: 3.2 };
+          if (score >= 60) return { grade: 'B', gpa: 2.8 };
+          if (score >= 50) return { grade: 'C+', gpa: 2.4 };
+          if (score >= 40) return { grade: 'C', gpa: 2.0 };
+          if (score >= 35) return { grade: 'D', gpa: 1.6 };
+          return { grade: 'F', gpa: 0.0 };
+        }
+
+        function formatGradePoint(value) {
+          const numericValue = Number(value);
+          return Number.isFinite(numericValue) ? numericValue.toFixed(1) : '-';
+        }
+
+        function getComponentBand(subject = {}, rawKey, maxKey) {
+          const rawValue = Number(subject[rawKey]);
+          const maxValue = Number(subject[maxKey]);
+          if (!Number.isFinite(rawValue) || !Number.isFinite(maxValue) || maxValue <= 0) {
+            return { grade: '-', gpa: '-' };
+          }
+
+          const normalizedScore = (rawValue / maxValue) * 100;
+          const band = toGradeBand(normalizedScore);
+          return { grade: band.grade, gpa: band.gpa.toFixed(1) };
+        }
+
+        function getFinalGradePoint(subject = {}) {
+          const subjectGradeValue = String(subject.finalGrade || subject.grade || '').trim().toUpperCase();
+          if (failingGradeValues.has(subjectGradeValue)) return 'NG';
+          return formatGradePoint(subject.gradePoint ?? subject.gpa);
+        }
+
+        function getSubjectRemark(subject = {}) {
+          const subjectGradeValue = String(subject.finalGrade || subject.grade || '').trim().toUpperCase();
+          return failingGradeValues.has(subjectGradeValue) ? 'NG' : 'PASS';
+        }
+
+        const issueDate = new Date().toLocaleDateString('en-GB');
+      %>
+      <section class="marksheet glass-card slide-up premium-marksheet classic-marksheet-sheet">
+        <header class="marksheet-header classic-marksheet-header">
+          <div class="classic-school-frame">
+            <img src="/photos/logo-round.png" alt="School logo" class="marksheet-logo classic-marksheet-logo" />
+            <div class="marksheet-brand-copy classic-marksheet-brand-copy">
+              <h1>SHREE KANKAI MADHYAMIK BIDHYALAYA</h1>
+              <p class="classic-school-address">Mai Municipality, Danabari, Ilam</p>
+              <div class="classic-sheet-meta">
+                <span>Estd.: 2017</span>
+                <span>EMIS CODE: 030070014</span>
+              </div>
+              <h2>GRADE SHEET</h2>
+              <p class="classic-exam-line"><%= result.examType %> Examination of <%= result.class %></p>
+            </div>
+          </div>
+        </header>
+
+        <section class="classic-student-block">
+          <div class="classic-student-grid">
+            <div class="classic-student-line">
+              <span>Student Name</span>
+              <strong><%= result.studentName %></strong>
+            </div>
+            <div class="classic-student-line">
+              <span>Class</span>
+              <strong><%= result.class %><%= result.section ? (' ' + result.section) : '' %></strong>
+            </div>
+            <div class="classic-student-line">
+              <span>Date of Birth</span>
+              <strong><%= result.dateOfBirth || '-' %></strong>
+            </div>
+            <div class="classic-student-line">
+              <span>Symbol No.</span>
+              <strong><%= result.symbolNumber %></strong>
+            </div>
+          </div>
+        </section>
+
+        <div class="table-wrap result-table-wrap classic-table-wrap">
+          <table class="result-table-premium classic-marksheet-table">
+            <thead>
+              <tr>
+                <th rowspan="2">S.N.</th>
+                <th rowspan="2">Subjects</th>
+                <th rowspan="2">Credit Hour</th>
+                <th colspan="2">Internal (IN)</th>
+                <th colspan="2">External (TH)</th>
+                <th rowspan="2">Final Grade</th>
+                <th rowspan="2">Grade Point</th>
+                <th rowspan="2">Remarks</th>
+              </tr>
+              <tr>
+                <th>GP</th>
+                <th>Grade</th>
+                <th>GP</th>
+                <th>Grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% result.subjects.forEach((subject, index) => {
+                const internalBand = getComponentBand(subject, 'pr', 'practicalMax');
+                const externalBand = getComponentBand(subject, 'th', 'theoryMax');
+              %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= subject.name %></td>
+                <td><%= subject.credit %></td>
+                <td><%= internalBand.gpa %></td>
+                <td><%= internalBand.grade %></td>
+                <td><%= externalBand.gpa %></td>
+                <td><%= externalBand.grade %></td>
+                <td><strong><%= subject.finalGrade || subject.grade %></strong></td>
+                <td><%= getFinalGradePoint(subject) %></td>
+                <td><%= getSubjectRemark(subject) %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+
+        <section class="classic-summary-strip">
+          <div class="classic-summary-row">
+            <span>GRADE POINT AVERAGE (GPA)</span>
+            <strong><%= overallGpaDisplay %></strong>
+          </div>
+          <div class="classic-summary-row">
+            <span>Result</span>
+            <strong><%= resultStatus %></strong>
+          </div>
+        </section>
+
+        <section class="print-sheet-footer classic-print-footer">
+          <div class="print-footer-meta classic-footer-meta">
+            <div class="print-meta-item">
+              <span>Issued Date</span>
+              <strong><%= issueDate %></strong>
+            </div>
+            <div class="print-meta-item">
+              <span>Exam</span>
+              <strong><%= result.examType %></strong>
+            </div>
+          </div>
+          <div class="print-signatures classic-signatures">
+            <div class="print-sign-box">
+              <span class="print-sign-label">Checked By</span>
+              <div class="print-sign-line"></div>
+              <strong class="print-sign-name">Class Teacher</strong>
+            </div>
+            <div class="print-sign-box">
+              <span class="print-sign-label">Prepared By</span>
+              <div class="print-sign-line"></div>
+              <strong class="print-sign-name">Examination Section</strong>
+            </div>
+            <div class="print-sign-box">
+              <span class="print-sign-label">Approved By</span>
+              <div class="print-sign-line"></div>
+              <strong class="print-sign-name">Principal</strong>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <div class="result-actions no-print">
+        <a class="btn-ghost" href="/result">Search Another</a>
+        <button type="button" class="btn-primary" onclick="window.print()">Print Marksheet</button>
+      </div>
+      <% } %>
+    </main>
+
+    <footer class="footer no-print">
+      <div class="container footer-grid">
+        <div>
+          <h3>Kankai Secondary School</h3>
+          <p>Quality education with discipline and practical skills.</p>
+        </div>
+        <div>
+          <h3>Address</h3>
+          <p>Mai Nagarpalika-4, Danabari, Sitali, Ilam</p>
+        </div>
+        <div>
+          <h3>Contact</h3>
+          <p>027-412005</p>
+          <p>Principal: 9843713487</p>
+          <p>kankaima75@gmail.com</p>
+        </div>
+      </div>
+      <div class="container footer-inner">
+      <div class="footer-contact-strip">
+        <span>Email : kankaima75@gmail.com | Ph: 027-412005</span>
+      </div>
+      <div class="footer-social-strip">
+        <a href="https://www.facebook.com/kankaimavi" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><span class="social-icon">f</span>Facebook</a>
+
+
+      </div>
+      <div class="footer-dev-credit">
+        <img src="/photos/developer-photo.jpeg" alt="Developer Anish Pandey" class="footer-dev-photo" loading="lazy" decoding="async" />
+        <div class="footer-dev-text">
+          <p class="footer-dev-kicker">Developed by</p>
+          <strong>Anish Pandey</strong>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+    <script src="/js/script.js?v=20260402galleryadmin2"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

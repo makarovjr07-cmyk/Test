@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact | Kankai Secondary School</title>
+  <link rel="icon" type="image/png" href="/photos/logo-round.png?v=20260227a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="styles.css?v=20260406smooth1" as="style" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260406smooth1" />
+</head>
+<body class="home-page">
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-left">Email : kankaima75@gmail.com | Ph: 027-412005</div>
+      <div class="topbar-social">
+        <a href="https://www.facebook.com/kankaimavi" target="_blank" rel="noopener noreferrer">Facebook</a>
+        
+        
+      </div>
+    </div>
+  </div>
+  <header class="header">
+    <div class="container nav">
+      <button class="apple-mobile-toggle" id="appleMobileToggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="primary-nav">
+        <span></span>
+        <span></span>
+      </button>
+      <a class="brand" href="/">
+        <img class="brand-mark" src="photos/logo-round.png" alt="Kankai Secondary School logo" />
+        <span class="brand-text">Kankai Secondary School</span>
+      </a>
+      <nav class="links" id="primary-nav">
+        <a href="/">Home</a>
+        <div class="nav-item has-dropdown">
+          <a class="nav-dropdown-toggle" href="/who-we-are" data-dropdown-trigger="about" aria-haspopup="true" aria-expanded="false">About Us <span class="nav-caret" aria-hidden="true">&#9662;</span></a>
+          <div class="nav-dropdown" role="menu" aria-label="About Us submenu">
+            <a href="/who-we-are" role="menuitem">Who we are?</a>
+            <a href="/our-history" role="menuitem">Our History</a>
+            <a href="/principal-message" role="menuitem">Message from the Principal</a>
+            <a href="/mission-vision" role="menuitem">Our Mission &amp; Vision</a>
+            <div class="nav-subitem has-submenu">
+              <a href="/teachers" role="menuitem" class="nav-team-link" data-submenu-trigger="team" aria-haspopup="true" aria-expanded="false">Team <span class="nav-arrow" aria-hidden="true">&#8594;</span></a>
+              <div class="nav-submenu" role="menu" aria-label="Team submenu">
+                <a href="/management-committee" role="menuitem">School Management Committee</a>
+                <a href="/administrative-staff" role="menuitem">Administrative Staff</a>
+                <a href="/faculty-members" role="menuitem">Faculty Members</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="nav-item has-dropdown">
+          <a class="nav-dropdown-toggle" href="/facilities" data-dropdown-trigger="facilities" aria-haspopup="true" aria-expanded="false">Facilities <span class="nav-caret" aria-hidden="true">&#9662;</span></a>
+          <div class="nav-dropdown" role="menu" aria-label="Facilities submenu">
+            <a href="/cafeteria" role="menuitem">Cafeteria</a>
+            <a href="/library" role="menuitem">Library</a>
+            <a href="/labs" role="menuitem">Computer, Science and Electronics Lab</a>
+            <a href="/first-aid" role="menuitem">First Aid</a>
+            <a href="/sports-eca" role="menuitem">Games, Sports and ECA</a>
+          </div>
+        </div>
+        <a href="/result" class="nav-result-link">Result</a>
+        <a href="/gallery">Gallery</a>
+        <a href="/notice-board">Notice</a>
+        <a href="/admissions">Admission </a>
+        <a class="active" href="/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="inner-hero container contactx-hero">
+      <p class="eyebrow">Stay Connected</p>
+      <h1>Contact Kankai Secondary School</h1>
+      <p>Feel free to contact us for admission, school visit, or general inquiries. We usually respond quickly during office hours.</p>
+      <div class="contactx-tags">
+        <span>Admissions Support</span>
+        <span>School Visit</span>
+        <span>General Inquiry</span>
+      </div>
+    </section>
+
+    <section class="section container contactx-grid">
+      <article class="contactx-info-card">
+        <h2>School Contact Information</h2>
+        <p>Reach out for admissions, notices, and student support.</p>
+
+        <div class="contactx-list">
+          <a href="tel:9843713487">
+            <strong>Principal Phone</strong>
+            <span>9843713487</span>
+          </a>
+          <a href="tel:027412005">
+            <strong>School Phone</strong>
+            <span>027-412005</span>
+          </a>
+          <a href="mailto:kankaima75@gmail.com">
+            <strong>Email</strong>
+            <span>kankaima75@gmail.com</span>
+          </a>
+          <div>
+            <strong>Address</strong>
+            <span>Mai Nagarpalika-4, Danabari, Sitali, Ilam</span>
+          </div>
+          <div>
+            <strong>Office Hours</strong>
+            <span>Sunday to Friday, 10:00 AM - 4:00 PM</span>
+          </div>
+        </div>
+
+        <div class="contactx-social">
+          <a href="https://www.facebook.com/kankaimavi" target="_blank" rel="noopener noreferrer">Facebook</a>
+          
+          
+        </div>
+      </article>
+
+      <form
+        class="form-card contactx-form"
+        data-contact-form="1"
+        action="/api/contact-request"
+        method="post">
+        <h3>Send Message</h3>
+        <p>Fill out the form and our office will contact you as soon as possible.</p>
+        <div class="form-grid">
+          <label>Full Name<input name="fullName" required /></label>
+          <label>Email<input name="email" type="email" required /></label>
+          <label>Phone Number<input name="phoneNumber" required /></label>
+          <label>Subject<input name="subject" required /></label>
+          <label class="full">Message<textarea name="message" rows="5" required></textarea></label>
+          <button class="btn btn-accent" type="submit">Send Inquiry</button>
+        </div>
+        <p class="form-status"></p>
+      </form>
+    </section>
+
+    <section class="section container contactx-location-grid">
+      <article class="contactx-map-card">
+        <h3>Find Us on Map</h3>
+        <p>Visit our school at Mai Nagarpalika-4, Danabari, Sitali, Ilam.</p>
+        <iframe title="School Location Map" src="https://www.google.com/maps?q=26.7625485,87.8861298&z=17&output=embed" loading="lazy"></iframe>
+      </article>
+      <article class="contactx-fb-card">
+        <h3>Follow School Updates</h3>
+        <p>Stay connected with our latest notices and activities.</p>
+        <iframe
+          title="Kankai School Facebook Timeline"
+          src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fkankaimavi&tabs=timeline&width=500&height=390&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true"
+          loading="lazy"
+          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+        </iframe>
+      </article>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div><h3>Kankai Secondary School</h3><p>Quality education with discipline and practical skills.</p></div>
+      <div><h3>Address</h3><p>Mai Nagarpalika-4, Danabari, Sitali, Ilam</p></div>
+      <div><h3>Contact</h3>
+          <p>027-412005</p>
+          <p>Principal: 9843713487</p>
+          <p>kankaima75@gmail.com</p></div>
+    </div>
+    <div class="container footer-inner">
+      <div class="footer-contact-strip">
+        <span>Email : kankaima75@gmail.com | Ph: 027-412005</span>
+      </div>
+      <div class="footer-social-strip">
+        <a href="https://www.facebook.com/kankaimavi" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><span class="social-icon">f</span>Facebook</a>
+        
+        
+      </div>
+      <div class="footer-dev-credit">
+        <img src="/photos/developer-photo.jpeg" alt="Developer Anish Pandey" class="footer-dev-photo" loading="lazy" decoding="async" />
+        <div class="footer-dev-text">
+          <p class="footer-dev-kicker">Developed by</p>
+          <strong>Anish Pandey</strong>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="script.js?v=20260408noticefix1" defer></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

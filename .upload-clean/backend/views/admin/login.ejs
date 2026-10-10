@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+  <link rel="icon" type="image/png" href="/photos/logo-round.png?v=20260227a" />
+    <link rel="stylesheet" href="/css/style.css?v=20260324adminsingletab1" />
+  </head>
+  <body class="admin-login-page">
+    <%- include('../partials/portal-nav', { resultPortalEnabled }) %>
+    <main class="login-shell fade-in">
+      <section class="login-showcase slide-up">
+        <div class="login-branding">
+          <img src="/photos/logo.png" alt="Kankai Secondary School Logo" class="login-school-logo" />
+          <div>
+            <p class="login-kicker">Kankai Secondary School</p>
+            <h1>Result Portal Control Center</h1>
+          </div>
+        </div>
+
+        <p class="login-copy">
+          Manage student results securely with a modern NEB-style administration panel.
+          Add records, review marksheets, and maintain data with confidence.
+        </p>
+
+        <div class="login-highlights">
+          <article>
+            <strong>Secure Access</strong>
+            <p>Session-protected admin pages with encrypted passwords.</p>
+          </article>
+          <article>
+            <strong>Smart Result Entry</strong>
+            <p>Flexible 6-9 subject entry with automatic grading and GPA.</p>
+          </article>
+          <article>
+            <strong>Instant Search</strong>
+            <p>Public symbol search with print-ready marksheet output.</p>
+          </article>
+        </div>
+
+        <div class="login-trust-strip">
+          <span>NEB-Style Marksheet</span>
+          <span>MongoDB Atlas</span>
+          <span>Real-Time Admin Workflow</span>
+        </div>
+      </section>
+
+      <section class="glass-card admin-login-card premium-login-card slide-up">
+        <p class="login-form-kicker">Staff Authentication</p>
+        <h2>Admin Login</h2>
+        <p>Only approved school staff can access admin controls.</p>
+
+        <% if (reauthRequired && !error) { %>
+        <div class="alert alert-success">Sensitive admin action detected. Please sign in again to continue.</div>
+        <% } %>
+
+        <% if (error) { %>
+        <div class="alert alert-error shake-error"><%= error %></div>
+        <% } %>
+
+        <form action="/admin/login" method="POST" data-loading="true">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <input type="hidden" name="next" value="<%= nextTarget || '/admin/dashboard' %>" />
+          <input type="hidden" name="singletab" value="<%= singleTabConflict ? '1' : '0' %>" />
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" required autocomplete="username" autocapitalize="none" spellcheck="false" />
+
+          <label for="password">Password</label>
+          <div class="password-field">
+            <input id="password" name="password" type="password" required autocomplete="current-password" />
+            <button
+              type="button"
+              class="password-toggle"
+              data-password-toggle="password"
+              aria-pressed="false"
+              aria-label="Show password"
+            >
+              Show
+            </button>
+          </div>
+
+          <button type="submit" class="btn-primary glow-on-hover">Login</button>
+        </form>
+
+        <a class="btn-ghost" href="/">Back to Home</a>
+      </section>
+    </main>
+
+    <footer class="footer no-print">
+      <div class="container footer-grid">
+        <div>
+          <h3>Kankai Secondary School</h3>
+          <p>Quality education with discipline and practical skills.</p>
+        </div>
+        <div>
+          <h3>Address</h3>
+          <p>Mai Nagarpalika-4, Danabari, Sitali, Ilam</p>
+        </div>
+        <div>
+          <h3>Contact</h3>
+          <p>027-412005</p>
+          <p>Principal: 9843713487</p>
+          <p>kankaima75@gmail.com</p>
+        </div>
+      </div>
+      <div class="container footer-inner">
+      <div class="footer-contact-strip">
+        <span>Email : kankaima75@gmail.com | Ph: 027-412005</span>
+      </div>
+      <div class="footer-social-strip">
+        <a href="https://www.facebook.com/kankaimavi" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><span class="social-icon">f</span>Facebook</a>
+        
+        
+      </div>
+      <div class="footer-dev-credit">
+        <img src="/photos/developer-photo.jpeg" alt="Developer Anish Pandey" class="footer-dev-photo" loading="lazy" decoding="async" />
+        <div class="footer-dev-text">
+          <p class="footer-dev-kicker">Developed by</p>
+          <strong>Anish Pandey</strong>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+    <script src="/js/script.js?v=20260402galleryadmin2"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

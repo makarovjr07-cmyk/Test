@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    <%= title %>
+  </title>
+  <link rel="icon" type="image/png" href="/photos/logo-round.png?v=20260227a" />
+  <link rel="stylesheet" href="/css/style.css?v=20260930dashboard18" />
+</head>
+
+<body class="admin-single-tab-ready admin-dashboard-page">
+  <% const latestBatchLabel=latestResults.length ? `Class ${latestResults[0].class}` : 'No batch yet' ; const
+    recentAveragePercentage=latestResults.length ? (latestResults.reduce((sum, item)=> sum + (Number(item.percentage) ||
+    0), 0) / latestResults.length).toFixed(1)
+    : '';
+    const liveControlCount = [
+    popupSettings?.resultPortal?.enabled,
+    popupSettings?.resultPublished?.enabled,
+    popupSettings?.entranceOpen?.enabled,
+    ].filter(Boolean).length;
+    const recommendedFocus = totalResults > 0
+    ? 'Review the latest entries, keep public controls updated, and export a fresh backup when the session is complete.'
+    : 'Start with the first result entry, then enable public access once your records are ready for students.';
+    const recentStudentNames = latestResults
+    .slice(0, 3)
+    .map((item) => String(item.studentName || '').trim())
+    .filter(Boolean);
+    %>
+    <main class="admin-layout fade-in">
+      <%- include('../partials/admin-sidebar', { activePage: 'dashboard' }) %>
+
+        <section class="admin-content slide-up premium-admin-content">
+          <header class="admin-page-head glass-card premium-page-head dashboard-premium-head">
+            <div class="dashboard-head-copy">
+              <p class="admin-head-kicker">Control Center</p>
+              <h1>Dashboard</h1>
+              <p class="admin-page-subtitle">A clear view of results, public controls, and the work that needs
+                attention.</p>
+              <div class="dashboard-head-pills">
+                <span class="dashboard-head-pill">Secure admin session</span>
+                <span class="dashboard-head-pill">
+                  <%= popupSettings?.resultPortal?.enabled ? 'Public result page visible' : 'Public result page hidden'
+                    %>
+                </span>
+                <span class="dashboard-head-pill">
+                  <%= totalResults ? `${totalResults} records ready` : 'Ready for first entry' %>
+                </span>
+              </div>
+            </div>
+            <div class="admin-page-metrics dashboard-page-metrics">
+              <div class="metric-chip">
+                <span>Result Portal</span>
+                <strong>
+                  <%= popupSettings?.resultPortal?.enabled ? 'Visible' : 'Hidden' %>
+                </strong>
+              </div>
+              <div class="metric-chip">
+                <span>Database</span>
+                <strong>
+                  <%= totalResults %> Records
+                </strong>
+              </div>
+              <div class="metric-chip">
+                <span>Recent Average</span>
+                <strong>
+                  <%= recentAveragePercentage ? `${recentAveragePercentage}%` : 'Waiting' %>
+                </strong>
+              </div>
+            </div>
+          </header>
+
+          <% if (message) { %>
+            <div class="alert alert-success">
+              <%= message %>
+            </div>
+            <% } %>
+
+              <section class="dashboard-shell-grid">
+                <article class="glass-card dashboard-command-center">
+                  <div class="dashboard-card-head">
+                    <div>
+                      <p class="dashboard-card-kicker">Launchpad</p>
+                      <h3>Move through admin work faster</h3>
+                      <p class="dashboard-card-subtitle">Jump into the tasks you use most without hunting through the
+                        sidebar.</p>
+                    </div>
+                    <span class="dashboard-card-chip">Smooth Workflow</span>
+                  </div>
+
+                  <div class="dashboard-action-grid">
+                    <a href="/admin/add-result" class="dashboard-action-card is-primary">
+                      <span class="dashboard-action-tag">Create</span>
+                      <strong>Add New Result</strong>
+                      <p>Open the result entry form and publish a new record quickly.</p>
+                      <span class="dashboard-action-foot">Direct entry path</span>
+                    </a>
+
+                    <a href="/admin/view-results" class="dashboard-action-card is-secondary">
+                      <span class="dashboard-action-tag">Review</span>
+                      <strong>Manage All Results</strong>
+                      <p>Check saved records, confirm marks, and keep the database tidy.</p>
+                      <span class="dashboard-action-foot">Editing workspace</span>
+                    </a>
+
+                    <% if (totalResults> 0) { %>
+                      <a href="/admin/export-results" class="dashboard-action-card is-secondary">
+                        <span class="dashboard-action-tag">Backup</span>
+                        <strong>Export Data</strong>
+                        <p>Download the current records into Excel for a safe offline copy.</p>
+                        <span class="dashboard-action-foot">Ready to export</span>
+                      </a>
+                      <% } else { %>
+                        <span class="dashboard-action-card is-muted is-disabled">
+                          <span class="dashboard-action-tag">Backup</span>
+                          <strong>Export Data</strong>
+                          <p>Add at least one result record before exporting the database.</p>
+                          <span class="dashboard-action-foot">Waiting for records</span>
+                        </span>
+                        <% } %>
+
+                          <a href="/admin/clear-db" class="dashboard-action-card is-danger">
+                            <span class="dashboard-action-tag">Caution</span>
+                            <strong>Danger Zone</strong>
+                            <p>Open protected database controls only when you are certain about the action.</p>
+                            <span class="dashboard-action-foot">Restricted action</span>
+                          </a>
+                  </div>
+                </article>
+
+                <article class="glass-card dashboard-insight-panel">
+                  <div class="dashboard-card-head">
+                    <div>
+                      <p class="dashboard-card-kicker">System Snapshot</p>
+                      <h3>Keep the whole portal in view</h3>
+                      <p class="dashboard-card-subtitle">A quick read on content, activity, and the public-facing
+                        controls students will feel first.</p>
+                    </div>
+                    <span class="dashboard-card-chip">Live Summary</span>
+                  </div>
+
+                  <div class="dashboard-snapshot-grid">
+                    <article class="dashboard-snapshot-tile">
+                      <span>Latest Batch</span>
+                      <strong>
+                        <%= latestBatchLabel %>
+                      </strong>
+                      <p>Most recent class visible in the newest stored records.</p>
+                    </article>
+                    <article class="dashboard-snapshot-tile">
+                      <span>Recent Entries</span>
+                      <strong>
+                        <%= latestResults.length %>
+                      </strong>
+                      <p>Records shown in your current dashboard preview window.</p>
+                    </article>
+                    <article class="dashboard-snapshot-tile">
+                      <span>Live Controls</span>
+                      <strong>
+                        <%= liveControlCount %>/3
+                      </strong>
+                      <p>Portal and homepage modules currently enabled for visitors.</p>
+                    </article>
+                    <article class="dashboard-snapshot-tile">
+                      <span>Recent Average</span>
+                      <strong>
+                        <%= recentAveragePercentage ? `${recentAveragePercentage}%` : 'Waiting' %>
+                      </strong>
+                      <p>Average score across the latest visible result entries.</p>
+                    </article>
+                  </div>
+
+                  <div class="dashboard-focus-strip">
+                    <span class="dashboard-focus-kicker">Recommended Focus</span>
+                    <p>
+                      <%= recommendedFocus %>
+                    </p>
+                  </div>
+
+                  <% if (recentStudentNames.length) { %>
+                    <div class="dashboard-mini-list">
+                      <span>Recent student entries</span>
+                      <div class="dashboard-mini-chips">
+                        <% recentStudentNames.forEach((name)=> { %>
+                          <span class="dashboard-mini-chip">
+                            <%= name %>
+                          </span>
+                          <% }) %>
+                      </div>
+                    </div>
+                    <% } %>
+                </article>
+              </section>
+
+              <section class="dashboard-control-grid">
+                <section class="glass-card popup-settings-section dashboard-portal-card">
+                  <div class="popup-settings-head">
+                    <div>
+                      <p class="popup-settings-kicker">Public Access Control</p>
+                      <h3>Result Portal Visibility</h3>
+                      <p class="popup-settings-subtitle">Show or hide the public result page and the Result item in the
+                        website navigation.</p>
+                    </div>
+                    <span class="popup-settings-chip">
+                      <%= popupSettings?.resultPortal?.enabled ? 'Visible Now' : 'Hidden Now' %>
+                    </span>
+                  </div>
+
+                  <form action="/admin/dashboard/result-portal" method="POST"
+                    class="popup-settings-form dashboard-portal-form">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <article class="popup-control-item glass-soft popup-item-portal">
+                      <div class="popup-control-title-row">
+                        <h4>Public Result Access</h4>
+                        <label class="switch-toggle">
+                          <input type="checkbox" name="resultPortalEnabled" <%=popupSettings?.resultPortal?.enabled
+                            ? 'checked' : '' %>
+                          />
+                          <span>Show Result Page</span>
+                        </label>
+                      </div>
+                      <p class="popup-settings-subtitle">When disabled, the Result link is hidden from the navbar and
+                        direct access to <code>/result</code> is blocked.</p>
+                    </article>
+
+                    <div class="dashboard-control-note-list">
+                      <article class="dashboard-control-note">
+                        <span>Navbar</span>
+                        <strong>
+                          <%= popupSettings?.resultPortal?.enabled ? 'Result menu stays visible'
+                            : 'Result menu stays hidden' %>
+                        </strong>
+                      </article>
+                      <article class="dashboard-control-note">
+                        <span>Direct Access</span>
+                        <strong>
+                          <%= popupSettings?.resultPortal?.enabled ? 'Students can open /result'
+                            : 'Direct result access is blocked' %>
+                        </strong>
+                      </article>
+                      <article class="dashboard-control-note">
+                        <span>Use Case</span>
+                        <strong>
+                          <%= popupSettings?.resultPortal?.enabled ? 'Ready for public checking'
+                            : 'Safe for private preparation' %>
+                        </strong>
+                      </article>
+                    </div>
+
+                    <div class="popup-control-actions">
+                      <button type="submit" class="btn-primary">Save Result Visibility</button>
+                    </div>
+                  </form>
+                </section>
+
+                <section class="glass-card popup-settings-section dashboard-popup-card">
+                  <div class="popup-settings-head">
+                    <div>
+                      <p class="popup-settings-kicker">Announcement Manager</p>
+                      <h3>Popup Settings - Index Page</h3>
+                      <p class="popup-settings-subtitle">Create and control popups shown on the homepage. Enable, edit
+                        content, and save instantly.</p>
+                    </div>
+                    <span class="popup-settings-chip">Dashboard Control</span>
+                  </div>
+
+                  <form action="/admin/dashboard/popup-settings" method="POST"
+                    class="popup-settings-form dashboard-popup-form">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <div class="popup-settings-grid dashboard-popup-settings-grid">
+                      <article class="popup-control-item glass-soft popup-item-result">
+                        <div class="popup-control-title-row">
+                          <h4>Popup 1: Result Published</h4>
+                          <label class="switch-toggle">
+                            <input type="checkbox" name="resultPublishedEnabled" <%=popupSettings &&
+                              popupSettings.resultPublished && popupSettings.resultPublished.enabled ? 'checked' : '' %>
+                            />
+                            <span>Enable</span>
+                          </label>
+                        </div>
+                        <label>
+                          Title
+                          <input type="text" name="resultPublishedTitle"
+                            value="<%= popupSettings?.resultPublished?.title || '' %>" required />
+                        </label>
+                        <label>
+                          Message
+                          <textarea name="resultPublishedMessage" rows="3"
+                            required><%= popupSettings?.resultPublished?.message || '' %></textarea>
+                        </label>
+                        <label>
+                          Image Path
+                          <input type="text" name="resultPublishedImage"
+                            value="<%= popupSettings?.resultPublished?.image || '/photos/cls12.jpg' %>"
+                            placeholder="/photos/cls12.jpg" />
+                        </label>
+                      </article>
+
+                      <article class="popup-control-item glass-soft popup-item-entrance">
+                        <div class="popup-control-title-row">
+                          <h4>Popup 2: Entrance Exam Open</h4>
+                          <label class="switch-toggle">
+                            <input type="checkbox" name="entranceOpenEnabled" <%=popupSettings &&
+                              popupSettings.entranceOpen && popupSettings.entranceOpen.enabled ? 'checked' : '' %>
+                            />
+                            <span>Enable</span>
+                          </label>
+                        </div>
+                        <label>
+                          Title
+                          <input type="text" name="entranceOpenTitle"
+                            value="<%= popupSettings?.entranceOpen?.title || '' %>" required />
+                        </label>
+                        <label>
+                          Message
+                          <textarea name="entranceOpenMessage" rows="3"
+                            required><%= popupSettings?.entranceOpen?.message || '' %></textarea>
+                        </label>
+                        <label>
+                          Image Path
+                          <input type="text" name="entranceOpenImage"
+                            value="<%= popupSettings?.entranceOpen?.image || '/photos/571812628_1277087307556453_2291941728688117624_n.jpg' %>"
+                            placeholder="/photos/571812628_1277087307556453_2291941728688117624_n.jpg" />
+                        </label>
+                      </article>
+                    </div>
+
+                    <div class="dashboard-save-strip">
+                      <span class="dashboard-save-chip">Homepage popups update right after save</span>
+                      <span class="dashboard-save-chip">Use clear image paths for faster loading</span>
+                    </div>
+
+                    <div class="popup-control-actions">
+                      <button type="submit" class="btn-primary">Save Popup Settings</button>
+                    </div>
+                  </form>
+                </section>
+              </section>
+
+              <section class="glass-card popup-settings-section dashboard-principal-message-card">
+                <div class="popup-settings-head">
+                  <div>
+                    <p class="popup-settings-kicker">Public Content</p>
+                    <h3>Principal Messages</h3>
+                    <p class="popup-settings-subtitle">Update the homepage principal message and all message sections on
+                      the principal page.</p>
+                  </div>
+                  <span class="popup-settings-chip">Homepage + Principal Page</span>
+                </div>
+                <div class="popup-control-actions">
+                  <a href="/admin/principal" class="btn-primary">Manage Principal Messages</a>
+                </div>
+              </section>
+
+              <div class="stats-grid premium-stats-grid dashboard-stats-grid">
+                <article class="glass-card stat-card premium-stat-card glow-on-hover">
+                  <p>Total Results</p>
+                  <h2>
+                    <%= totalResults %>
+                  </h2>
+                  <span class="dashboard-stat-note">Every saved marksheet currently in the system.</span>
+                </article>
+                <article class="glass-card stat-card premium-stat-card">
+                  <p>Latest Batch</p>
+                  <h2>
+                    <%= latestResults.length ? latestResults[0].class : 'N/A' %>
+                  </h2>
+                  <span class="dashboard-stat-note">Most recent class inside your latest result set.</span>
+                </article>
+                <article class="glass-card stat-card premium-stat-card">
+                  <p>Recent Entries</p>
+                  <h2>
+                    <%= latestResults.length %>
+                  </h2>
+                  <span class="dashboard-stat-note">Results visible in this dashboard preview panel.</span>
+                </article>
+                <article class="glass-card stat-card premium-stat-card">
+                  <p>Live Controls</p>
+                  <h2>
+                    <%= liveControlCount %>/3
+                  </h2>
+                  <span class="dashboard-stat-note">Public portal and homepage announcements enabled now.</span>
+                </article>
+              </div>
+
+              <section class="glass-card premium-table-card dashboard-table-card">
+                <div class="managed-table-head dashboard-table-head">
+                  <div>
+                    <p class="dashboard-card-kicker">Monitoring</p>
+                    <h3>Recently Added Results</h3>
+                    <p class="dashboard-card-subtitle">Keep an eye on the newest records before publishing updates or
+                      exporting the full dataset.</p>
+                  </div>
+                  <% const defaultLatestLimit=4; %>
+                    <% const expandedLatestLimit=50; %>
+                      <% const isExpanded=latestLimit> defaultLatestLimit; %>
+                        <% const nextLimit=isExpanded ? defaultLatestLimit : expandedLatestLimit; %>
+                          <% const showMore=!isExpanded && totalResults> latestLimit; %>
+                            <div class="managed-table-actions dashboard-table-actions">
+                              <span>Latest <%= latestResults.length %> of <%= totalResults %> records</span>
+                              <% if (latestResults.length> 0) { %>
+                                <label class="dashboard-results-search">
+                                  <span class="sr-only">Search recent results</span>
+                                  <input type="search" data-dashboard-results-search placeholder="Search name or symbol"
+                                    autocomplete="off" />
+                                </label>
+                                <% } %>
+                                  <% if (showMore) { %>
+                                    <a class="btn-ghost btn-small" href="/admin/dashboard?latest=<%= nextLimit %>">Show
+                                      more</a>
+                                    <% } else if (isExpanded) { %>
+                                      <a class="btn-ghost btn-small"
+                                        href="/admin/dashboard?latest=<%= nextLimit %>">Show less</a>
+                                      <% } %>
+                            </div>
+                </div>
+                <% if (latestResults.length===0) { %>
+                  <p class="empty-state">No records found yet.</p>
+                  <% } else { %>
+                    <div class="table-wrap">
+                      <table data-dashboard-results-table>
+                        <thead>
+                          <tr>
+                            <th>Symbol</th>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>Section</th>
+                            <th>GPA</th>
+                            <th>Result</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% latestResults.forEach((item)=> { %>
+                            <% const failingGradeValues=new Set(['F', 'NG' ]); const
+                              hasFailingSubject=Array.isArray(item.subjects) && item.subjects.some((subject)=>
+                              failingGradeValues.has(String(subject.finalGrade || subject.grade ||
+                              '').trim().toUpperCase()));
+                              const overallGradeValue = String(item.overallGrade || '').trim().toUpperCase();
+                              const resultStatus = (overallGradeValue === 'NG' || overallGradeValue === 'F' ||
+                              hasFailingSubject)
+                              ? 'Fail'
+                              : 'Pass';
+                              const overallGpaValue = Number(item.overallGPA);
+                              const overallGpaDisplay = resultStatus === 'Fail'
+                              ? 'NG'
+                              : (Number.isFinite(overallGpaValue) ? overallGpaValue.toFixed(3) : String(item.overallGPA
+                              || '-'));
+                              %>
+                              <tr>
+                                <td>
+                                  <%= item.symbolNumber %>
+                                </td>
+                                <td>
+                                  <%= item.studentName %>
+                                </td>
+                                <td>
+                                  <%= item.class %>
+                                </td>
+                                <td>
+                                  <%= item.section || '-' %>
+                                </td>
+                                <td>
+                                  <%= overallGpaDisplay %>
+                                </td>
+                                <td>
+                                  <%= resultStatus %>
+                                </td>
+                              </tr>
+                              <% }) %>
+                        </tbody>
+                      </table>
+                    </div>
+                    <% } %>
+              </section>
+        </section>
+    </main>
+
+    <script src="/js/script.js?v=20261001principalmessage1"></script>
+</body>
+
+</html>

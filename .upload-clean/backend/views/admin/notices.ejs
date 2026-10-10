@@ -1,0 +1,328 @@
+<%
+  const totalNotices = notices.length;
+  const activeNotices = notices.filter((notice) => notice && notice.active).length;
+  const pinnedNotices = notices.filter((notice) => notice && notice.pinned).length;
+  const draftNotices = totalNotices - activeNotices;
+  const formDateValue = editingNotice && editingNotice.publishedOn ? editingNotice.publishedOn : todayNoticeDate;
+
+  function formatAdminNoticeDate(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return 'No date';
+    const parts = raw.split('-');
+    if (parts.length !== 3) return raw;
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  }
+%>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="icon" type="image/png" href="/photos/logo-round.png?v=20260227a" />
+    <link rel="stylesheet" href="/css/style.css?v=20261001notices2" />
+  </head>
+  <body class="admin-single-tab-ready">
+    <main class="admin-layout fade-in">
+      <%- include('../partials/admin-sidebar', { activePage: 'notices' }) %>
+
+      <section class="admin-content slide-up premium-admin-content notice-admin-page">
+        <header class="admin-page-head glass-card premium-page-head">
+          <div>
+            <p class="admin-head-kicker">Content Desk</p>
+            <h1>Notice Management</h1>
+            <p class="admin-page-subtitle">
+              Publish school notices, pin important announcements, and keep public notices updated from one place.
+            </p>
+          </div>
+          <div class="admin-page-metrics">
+            <div class="metric-chip">
+              <span>Total Notices</span>
+              <strong><%= totalNotices %></strong>
+            </div>
+            <div class="metric-chip">
+              <span>Visible</span>
+              <strong><%= activeNotices %></strong>
+            </div>
+            <div class="metric-chip">
+              <span>Pinned</span>
+              <strong><%= pinnedNotices %></strong>
+            </div>
+          </div>
+        </header>
+
+        <% if (message) { %>
+        <div class="alert alert-success"><%= message %></div>
+        <% } %>
+        <% if (error) { %>
+        <div class="alert alert-error"><%= error %></div>
+        <% } %>
+
+        <% const latestUpdates = Array.isArray(popupSettings?.latestUpdates) && popupSettings.latestUpdates.length ? popupSettings.latestUpdates : [
+          { title: 'Entrance form open for class 9', message: 'Admission open for new session. Contact school for details.' },
+          { title: 'School Notice', message: 'Important notice for students and parents is available in school office.' },
+          { title: 'Co-curricular Activities', message: 'Regular sports, cultural, and skill programs are running.' }
+        ]; %>
+
+        <section id="notice-form" class="glass-card popup-settings-section notice-form-section">
+          <div class="popup-settings-head">
+            <div>
+              <p class="popup-settings-kicker"><%= editingNotice ? 'Edit Notice' : 'Add Notice' %></p>
+              <h3><%= editingNotice ? 'Update Notice Details' : 'Create A New Public Notice' %></h3>
+              <p class="popup-settings-subtitle">
+                Pinned notices stay at the top of the public board. Turn visibility off anytime to hide a notice without deleting it.
+              </p>
+            </div>
+            <span class="popup-settings-chip"><%= editingNotice ? 'Editing Live Notice' : 'Publish Ready' %></span>
+          </div>
+
+          <form action="/admin/notices" method="POST" class="popup-settings-form" data-loading="true">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <input type="hidden" name="id" value="<%= editingNotice ? editingNotice._id : '' %>" />
+
+            <div class="popup-settings-grid notice-form-grid">
+              <article class="popup-control-item glass-soft">
+                <div class="notice-card-head">
+                  <div>
+                    <p class="popup-settings-kicker">Notice Copy</p>
+                    <h4>Headline & Message</h4>
+                  </div>
+                  <span class="popup-settings-mini-chip">Public Board</span>
+                </div>
+
+                <label>
+                  Notice Title
+                  <input
+                    type="text"
+                    name="title"
+                    value="<%= editingNotice ? editingNotice.title : '' %>"
+                    placeholder="Entrance form open for Class 9"
+                    required
+                  />
+                </label>
+
+                <label>
+                  Message
+                  <textarea
+                    name="message"
+                    rows="6"
+                    placeholder="Write the main notice details here."
+                    required
+                  ><%= editingNotice ? editingNotice.message : '' %></textarea>
+                </label>
+
+                <label>
+                  Publish Date
+                  <input
+                    type="date"
+                    name="publishedOn"
+                    value="<%= formDateValue %>"
+                    required
+                  />
+                </label>
+              </article>
+
+              <article class="popup-control-item glass-soft notice-form-side-card">
+                <div class="notice-card-head">
+                  <div>
+                    <p class="popup-settings-kicker">Actions & Visibility</p>
+                    <h4>Status Controls</h4>
+                  </div>
+                  <span class="popup-settings-mini-chip"><%= editingNotice ? 'Update Mode' : 'New Notice' %></span>
+                </div>
+
+                <label>
+                  Link URL
+                  <input
+                    type="text"
+                    name="linkUrl"
+                    value="<%= editingNotice ? (editingNotice.linkUrl || '') : '' %>"
+                    placeholder="/admissions or https://example.com/file.pdf"
+                  />
+                </label>
+
+                <label>
+                  Link Label
+                  <input
+                    type="text"
+                    name="linkLabel"
+                    value="<%= editingNotice ? (editingNotice.linkLabel || '') : '' %>"
+                    placeholder="Read Notice"
+                  />
+                </label>
+
+                <div class="notice-toggle-stack">
+                  <label class="switch-toggle">
+                    <input
+                      type="checkbox"
+                      name="active"
+                      <%= !editingNotice || editingNotice.active ? 'checked' : '' %>
+                    />
+                    <span>Visible on website</span>
+                  </label>
+                  <label class="switch-toggle">
+                    <input
+                      type="checkbox"
+                      name="pinned"
+                      <%= editingNotice && editingNotice.pinned ? 'checked' : '' %>
+                    />
+                    <span>Pin to top</span>
+                  </label>
+                </div>
+
+                <div class="notice-side-tip">
+                  <strong>Quick tip</strong>
+                  <p>Use a link when the notice should open admissions, a download, or another school page.</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="popup-control-actions">
+              <button type="submit" class="btn-primary"><%= editingNotice ? 'Update Notice' : 'Publish Notice' %></button>
+              <% if (editingNotice) { %>
+              <a href="/admin/notices" class="btn-ghost teacher-form-cancel-link">Cancel Edit</a>
+              <% } %>
+            </div>
+          </form>
+        </section>
+
+        <section class="glass-card popup-settings-section">
+          <div class="popup-settings-head">
+            <div>
+              <p class="popup-settings-kicker">Notice Section</p>
+              <h3>Latest Updates Cards</h3>
+              <p class="popup-settings-subtitle">Manage the three public update cards here from the Notice admin page.</p>
+            </div>
+            <span class="popup-settings-chip">Homepage Cards</span>
+          </div>
+
+          <form action="/admin/notices/latest-updates" method="POST" class="popup-settings-form" data-loading="true">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+            <div class="latest-updates-admin-grid">
+              <% latestUpdates.forEach((item, index) => { %>
+              <article class="popup-control-item glass-soft popup-item-update">
+                <div class="popup-control-title-row">
+                  <h4>Update Card <%= index + 1 %></h4>
+                  <span class="popup-settings-mini-chip">Homepage</span>
+                </div>
+                <label>
+                  Title
+                  <input
+                    type="text"
+                    name="latestUpdateTitle<%= index + 1 %>"
+                    value="<%= item?.title || '' %>"
+                    required
+                  />
+                </label>
+                <label>
+                  Message
+                  <textarea name="latestUpdateMessage<%= index + 1 %>" rows="3" required><%= item?.message || '' %></textarea>
+                </label>
+              </article>
+              <% }) %>
+            </div>
+
+            <div class="popup-control-actions">
+              <button type="submit" class="btn-primary">Save Latest Updates</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="glass-card premium-table-card">
+          <div class="managed-table-head">
+            <div>
+              <p class="popup-settings-kicker">Public Feed</p>
+              <h3>All Notices</h3>
+              <p class="popup-settings-subtitle">
+                Pinned notices appear first. Draft notices stay saved here but remain hidden from the public page.
+              </p>
+            </div>
+            <div class="managed-table-actions">
+              <span><%= activeNotices %> live | <%= draftNotices %> hidden</span>
+            </div>
+          </div>
+
+          <% if (!notices.length) { %>
+          <p class="empty-state">No notices added yet. Publish your first notice from the form above.</p>
+          <% } else { %>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Notice</th>
+                  <th>Status</th>
+                  <th>Link</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% notices.forEach((notice) => { %>
+                <%
+                  const noticeLinkUrl = String(notice.linkUrl || '').trim();
+                  const noticeLinkLabel = String(notice.linkLabel || '').trim() || 'Open Notice';
+                  const isExternalLink = /^https?:\/\//i.test(noticeLinkUrl);
+                %>
+                <tr>
+                  <td>
+                    <span class="notice-date-cell"><%= formatAdminNoticeDate(notice.publishedOn) %></span>
+                  </td>
+                  <td>
+                    <strong class="notice-table-title"><%= notice.title %></strong>
+                    <span class="notice-table-message"><%= notice.message %></span>
+                  </td>
+                  <td>
+                    <div class="notice-status-badges">
+                      <span class="notice-status-chip <%= notice.active ? 'is-active' : 'is-hidden' %>">
+                        <%= notice.active ? 'Visible' : 'Hidden' %>
+                      </span>
+                      <% if (notice.pinned) { %>
+                      <span class="notice-status-chip is-pinned">Pinned</span>
+                      <% } %>
+                    </div>
+                  </td>
+                  <td>
+                    <% if (noticeLinkUrl) { %>
+                    <a
+                      href="<%= noticeLinkUrl %>"
+                      class="notice-link-anchor"
+                      <%= isExternalLink ? 'target="_blank" rel="noopener noreferrer"' : '' %>
+                    >
+                      <%= noticeLinkLabel %>
+                    </a>
+                    <% } else { %>
+                    <span class="notice-link-muted">No link</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <div class="notice-row-actions">
+                      <a href="/admin/notices?edit=<%= notice._id %>#notice-form" class="btn-ghost btn-small">Edit</a>
+                      <form
+                        action="/admin/notices/delete"
+                        method="POST"
+                        data-loading="true"
+                        data-confirm="Delete this notice permanently?"
+                        class="notice-inline-form"
+                      >
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                        <input type="hidden" name="id" value="<%= notice._id %>" />
+                        <button type="submit" class="btn-danger btn-small">Delete</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+          <% } %>
+        </section>
+      </section>
+    </main>
+
+    <script src="/js/script.js?v=20260409adminux1"></script>
+  </body>
+</html>
+
+
