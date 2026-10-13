@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kankai Secondary School</title>
+  <title>Notice Board | Kankai Secondary School</title>
   <link rel="icon" type="image/png" href="/photos/logo-round.png?v=20260227a" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,14 +14,12 @@
   <link rel="stylesheet" href="styles.css?v=20261003newspremiumrow1" />
 </head>
 
-<body class="home-page home-hero">
+<body class="home-page notice-page">
   <div class="topbar">
     <div class="container topbar-inner">
       <div class="topbar-left">Email : kankaima75@gmail.com | Ph: 027-412005</div>
       <div class="topbar-social">
         <a href="https://www.facebook.com/kankaimavi" target="_blank" rel="noopener noreferrer">Facebook</a>
-
-
       </div>
     </div>
   </div>
@@ -34,11 +32,11 @@
         <span></span>
       </button>
       <a class="brand" href="/">
-        <img class="brand-mark" src="photos/logo-round.png" alt="Kankai Secondary School logo" />
+        <img class="brand-mark" src="/photos/logo-round.png" alt="Kankai Secondary School logo" />
         <span class="brand-text">Kankai Secondary School</span>
       </a>
       <nav class="links" id="primary-nav">
-        <a class="active" href="/">Home</a>
+        <a href="/">Home</a>
         <div class="nav-item has-dropdown">
           <a class="nav-dropdown-toggle" href="/who-we-are" data-dropdown-trigger="about" aria-haspopup="true"
             aria-expanded="false">About Us <span class="nav-caret" aria-hidden="true">&#9662;</span></a>
@@ -48,8 +46,9 @@
             <a href="/principal-message" role="menuitem">Message from the Principal</a>
             <a href="/mission-vision" role="menuitem">Our Mission &amp; Vision</a>
             <div class="nav-subitem has-submenu">
-              <a href="/teachers" role="menuitem" class="nav-team-link" data-submenu-trigger="team" aria-haspopup="true"
-                aria-expanded="false">Team <span class="nav-arrow" aria-hidden="true">&#8594;</span></a>
+              <a href="/teachers" role="menuitem" class="nav-team-link" data-submenu-trigger="team"
+                aria-haspopup="true" aria-expanded="false">Team <span class="nav-arrow"
+                  aria-hidden="true">&#8594;</span></a>
               <div class="nav-submenu" role="menu" aria-label="Team submenu">
                 <a href="/management-committee" role="menuitem">School Management Committee</a>
                 <a href="/administrative-staff" role="menuitem">Administrative Staff</a>
@@ -71,207 +70,50 @@
         </div>
         <a href="/result" class="nav-result-link">Result</a>
         <a href="/gallery">Gallery</a>
-        <a href="/notice-board">Notice</a>
-        <a href="/admissions">Admission </a>
+        <a class="active" href="/notice-board" aria-current="page">Notice</a>
+        <a href="/admissions">Admission</a>
         <a href="/contact">Contact</a>
       </nav>
     </div>
   </header>
 
   <main>
-    <section class="hero">
-      <div id="hero-media-a" class="hero-media"></div>
-      <div id="hero-media-b" class="hero-media"></div>
-      <div class="hero-overlay"></div>
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <p id="hero-eyebrow" class="eyebrow">Welcome To Kankai Secondary School</p>
-          <p class="hero-mobile-welcome">Welcome to Kankai Secondary School</p>
-          <h1 id="hero-title">Education Opens up the Mind</h1>
-          <p id="hero-description">Quality education for strong character, practical skills, and future-ready students.
-          </p>
-          <div class="hero-actions">
-            <a id="hero-cta-primary" href="/who-we-are" class="btn btn-accent">View More</a>
-            <a id="hero-cta-secondary" href="/contact" class="btn btn-secondary">Book School Visit</a>
+    <section class="inner-hero container notice-page-hero">
+      <div class="notice-page-hero-copy">
+        <p class="notice-page-eyebrow">Official school updates</p>
+        <h1>School Notice Board</h1>
+        <p>Announcements, important dates, and updates for students, families, and our school community.</p>
+      </div>
+      <div class="notice-page-hero-art" aria-hidden="true">
+        <div class="notice-page-hero-art-ring"></div>
+        <div class="notice-page-hero-icon">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M13 20a11 11 0 0 1 22 0c0 12 5 13 5 16H8c0-3 5-4 5-16Z" />
+            <path d="M20 41h8" />
+            <path d="M24 7V4" />
+          </svg>
+        </div>
+        <span class="notice-page-hero-dot"></span>
+      </div>
+    </section>
+
+    <section class="section container notice-board-content">
+      <div class="notice-board-shell">
+        <div class="notice-board-toolbar">
+          <div class="notice-board-heading">
+            <p class="notice-board-kicker">From the school</p>
+            <h2>Latest Notices</h2>
+            <p class="notice-board-toolbar-copy">Browse current announcements or search by title and details.</p>
           </div>
+          <label class="notice-board-search">
+            <span>Find a notice</span>
+            <input type="search" data-notice-search placeholder="Search by title or details"
+              aria-label="Search notices by title or details" />
+          </label>
         </div>
+        <div class="notice-board-grid" data-notice-board-grid></div>
+        <p class="notice-board-empty" data-notice-board-empty hidden>No notices are available right now.</p>
       </div>
-    </section>
-
-    <section class="home-showcase section">
-      <div class="container home-showcase-grid">
-        <article class="showcase-copy">
-          <h2>Welcome to Shree Kankai Secondary School</h2>
-          <p class="showcase-highlight">Shree Kankai Secondary School was established in 2017 B.S. and is located in the
-            heart of Mai Nagarpalika-4, Danabari, Sitali, Ilam.</p>
-          <p>We have a young, energetic, dedicated and dynamic team of teachers to provide quality education based on
-            practical and technology-focused learning.</p>
-          <p>We are running Computer Engineering classes from Class 9 to 12 with the aim of producing job-oriented and
-            skillful students.</p>
-          <a href="/who-we-are" class="showcase-link">Read More</a>
-        </article>
-        <div class="showcase-gallery">
-          <figure class="showcase-image showcase-image-lg">
-            <img src="photos/collage higlight/3e109050-cf69-4f21-91b3-2fa5c589894b.jpg" alt="School highlight"
-              loading="lazy" decoding="async" />
-          </figure>
-          <figure class="showcase-image">
-            <img src="photos/571812628_1277087307556453_2291941728688117624_n.jpg" alt="School activity highlight"
-              loading="lazy" decoding="async" />
-          </figure>
-          <figure class="showcase-image">
-            <img src="photos/481078693_1094847672447085_530806369640170268_n.jpg" alt="School building highlight"
-              loading="lazy" decoding="async" />
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <section class="home-why section">
-      <div class="home-why-overlay"></div>
-      <div class="container home-why-content">
-        <div class="section-head center">
-          <h2>Why Shree Kankai Secondary School</h2>
-        </div>
-        <div class="why-grid why-grid-modern">
-          <article class="why-item">
-            <h3>Best Infrastructure</h3>
-          </article>
-          <article class="why-item">
-            <h3>English & Nepali Medium</h3>
-          </article>
-          <article class="why-item">
-            <h3>Computer Engineering</h3>
-          </article>
-          <article class="why-item">
-            <h3>Library</h3>
-          </article>
-          <article class="why-item">
-            <h3>Skilled Teachers</h3>
-          </article>
-          <article class="why-item">
-            <h3>Science & Electronics Lab</h3>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section container principal-modern" id="principal-message-home" data-principal-profile
-      data-principal-home-message>
-      <figure class="principal-modern-photo">
-        <img src="/photos/logo-round.png" alt="Principal" loading="lazy" decoding="async" data-principal-image />
-        <figcaption data-principal-name>Principal</figcaption>
-      </figure>
-      <article class="principal-modern-copy">
-        <h2 data-principal-home-title>Message From the Principal</h2>
-        <p data-principal-home-greeting>Dear Students / Parents and Guardians,</p>
-        <div data-principal-home-body>
-          <p>It is my great pleasure to introduce Shree Kankai Secondary School Mai Nagarpalika-4, Danabari, Sitali,
-            Ilam
-            as a well-recognized community school of Ilam. It was founded in 2017 B.S and has managed to stand out among
-            a group of high-quality education providers in the country.</p>
-          <p>This school, which is always motivated by a noble vision, aspires to make a significant contribution to
-            nation-building. This school has provided time-tested instruction to all of its pupils since the beginning
-            of its existence. It provides a vast array of options, both within and outside of our taught curriculum.
-            This is a proven school with a positive attitude and a belief that anything is possible.</p>
-        </div>
-      </article>
-    </section>
-
-    <section class="section container contact-map-section">
-      <div class="contact-map-grid">
-        <article class="contact-card">
-          <h3>School Information</h3>
-          <p><strong>Address</strong>Mai Nagarpalika-4, Danabari, Sitali, Ilam</p>
-          <p><strong>Principal Phone</strong><a href="tel:9843713487">9843713487</a></p>
-          <p><strong>School Phone</strong>027-412005</p>
-          <p><strong>Email</strong>kankaima75@gmail.com</p>
-          <div class="contact-social">
-            <a href="https://www.facebook.com/kankaimavi" target="_blank" rel="noopener noreferrer">Facebook</a>
-
-
-          </div>
-        </article>
-        <div class="map-card">
-          <iframe title="School Location Map"
-            src="https://www.google.com/maps?q=26.7625485,87.8861298&z=17&output=embed" loading="lazy"></iframe>
-        </div>
-        <article class="fb-card">
-          <h3>Facebook Updates</h3>
-          <p>Live preview from our official page.</p>
-          <iframe title="Kankai School Facebook Timeline"
-            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fkankaimavi&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true"
-            loading="lazy" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
-          </iframe>
-        </article>
-      </div>
-    </section>
-
-    <section class="section container counters">
-      <div id="stats-grid" class="stats-grid"></div>
-    </section>
-
-    <section class="section section-soft home-updates-stack" data-latest-updates-section>
-      <div class="container home-updates-stack-shell">
-        <div class="home-updates-stack-copy">
-          <p class="home-updates-stack-eyebrow">Latest News</p>
-          <h2>Latest news from Kankai</h2>
-        </div>
-        <div class="home-updates-stack-stage">
-          <div class="home-updates-stack-progress" data-latest-updates-progress aria-hidden="true">
-            <span class="home-updates-stack-progress-fill" data-latest-updates-progress-fill></span>
-            <span class="home-updates-stack-progress-dot is-active" data-latest-updates-progress-dot></span>
-            <span class="home-updates-stack-progress-dot" data-latest-updates-progress-dot></span>
-            <span class="home-updates-stack-progress-dot" data-latest-updates-progress-dot></span>
-          </div>
-          <div class="news-grid home-updates-stack-grid">
-            <article class="panel news-card" data-latest-update-card="0" data-stack-label="Admissions Desk">
-              <div class="home-updates-stack-card-top">
-                <span class="home-updates-stack-index">01</span>
-                <span class="home-updates-stack-tag">Admissions Desk</span>
-              </div>
-              <h3 data-latest-update-title>Entrance form open for class 9</h3>
-              <p data-latest-update-message>Admission open for new session. Contact school for details.</p>
-              <div class="home-updates-stack-card-foot">
-                <span>Open for 2026</span>
-                <span>School news update</span>
-              </div>
-            </article>
-            <article class="panel news-card" data-latest-update-card="1" data-stack-label="School Notice">
-              <div class="home-updates-stack-card-top">
-                <span class="home-updates-stack-index">02</span>
-                <span class="home-updates-stack-tag">School Notice</span>
-              </div>
-              <h3 data-latest-update-title>School Notice</h3>
-              <p data-latest-update-message>Important notice for students and parents is available in school office.</p>
-              <div class="home-updates-stack-card-foot">
-                <span>Official bulletin</span>
-                <span>For students &amp; parents</span>
-              </div>
-            </article>
-            <article class="panel news-card" data-latest-update-card="2" data-stack-label="Student Life">
-              <div class="home-updates-stack-card-top">
-                <span class="home-updates-stack-index">03</span>
-                <span class="home-updates-stack-tag">Student Life</span>
-              </div>
-              <h3 data-latest-update-title>Co-curricular Activities</h3>
-              <p data-latest-update-message>Regular sports, cultural, and skill programs are running.</p>
-              <div class="home-updates-stack-card-foot">
-                <span>Beyond classroom</span>
-                <span>Campus highlights</span>
-              </div>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section container highlights-showcase">
-      <div class="section-head">
-        <h2>School Highlights</h2>
-        <p>Our best moments from school life, activities, and student achievements.</p>
-      </div>
-      <div id="home-gallery-grid" class="gallery-grid highlights-grid"></div>
     </section>
   </main>
 
@@ -299,8 +141,6 @@
       <div class="footer-social-strip">
         <a href="https://www.facebook.com/kankaimavi" target="_blank" rel="noopener noreferrer"
           aria-label="Facebook"><span class="social-icon">f</span>Facebook</a>
-
-
       </div>
       <div class="footer-dev-credit">
         <img src="/photos/developer-photo.jpeg" alt="Developer Anish Pandey" class="footer-dev-photo" loading="lazy"
